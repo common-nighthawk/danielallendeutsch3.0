@@ -6,11 +6,12 @@
   <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootswatch/3.3.0/journal/bootstrap.min.css">
   <link rel="stylesheet" href="../assets/style/main.css">
   <link rel="stylesheet" href="../assets/style/extra.css">
-  <link rel="icon" type="image/jpg" href="assets/images/ddd-about.jpg">
+  <link rel="icon" type="image/jpg" href="../assets/images/ddd-about.jpg">
+  <script src="../assets/javascript/ga.js"></script>
 </head>
 <body>
   <div class="row header">
-    <a class="no-underline" href="index.html">
+    <a class="no-underline" href="../index.html">
       <h1>Daniel Allen Deutsch</h1>
       <h4 class="title">Web Developer</h4>
     </a>
@@ -19,13 +20,54 @@
   <div class="row main">
     <h3 class="blog-title center">Tic-Tac-Toe, Motherfucker</h3>
     <h6 class="blog-title center">August 15, 2015</h6>
-    <p>Accumsan suspendisse enim eu viverra non a duis nostra parturient torquent porta sem parturient primis parturient penatibus tristique fames. Parturient a morbi non consequat a a consectetur a curae nibh vestibulum ultricies a erat. Ultrices varius adipiscing sodales dapibus aenean consectetur auctor eu lacus scelerisque condimentum cursus nec vestibulum aptent metus scelerisque sapien diam curabitur erat mauris habitasse sodales a et. Duis porttitor vestibulum in suspendisse nibh ullamcorper proin diam ut netus eu parturient vivamus nec justo mi a.</p>
-    <p>Tincidunt vehicula senectus elementum vestibulum a euismod a mus habitant tempor eu massa ut euismod iaculis suspendisse mus curae velit platea phasellus magna condimentum nibh ad. Curae parturient consectetur condimentum ridiculus dolor sapien metus vestibulum blandit blandit elit a dignissim vel mi a. Mi sagittis ullamcorper maecenas eu platea sociosqu hac et scelerisque vitae scelerisque turpis a diam cubilia ad iaculis lacinia quam duis. Suspendisse ad vestibulum parturient fames purus vulputate himenaeos erat dignissim mus ridiculus neque id scelerisque leo vestibulum non porttitor. At maecenas ullamcorper donec id a a ligula eget parturient tristique viverra ullamcorper vestibulum maecenas hac nisl felis.</p>
-    <p>A adipiscing condimentum sed a a in a volutpat a et magna fermentum vestibulum inceptos eros nam arcu scelerisque a netus congue scelerisque. Quisque non fringilla ullamcorper parturient diam neque taciti facilisi suspendisse ultrices facilisi erat dolor parturient a a commodo vulputate at bibendum scelerisque. Porttitor fringilla ad tempus nunc ultrices nostra lobortis fermentum sed dui faucibus vestibulum nostra proin. Parturient dolor ac condimentum consectetur posuere a in est consectetur vitae aptent ullamcorper a a sed orci ac orci et lectus varius fermentum adipiscing nascetur purus.</p>
-    <p>Justo aptent parturient netus dictum blandit pulvinar habitasse orci eleifend fusce donec sit nostra et fringilla vehicula ultricies at. A lacus scelerisque a tincidunt nibh ante ipsum vestibulum a aliquam potenti elit auctor ultrices. Sagittis volutpat magna ut ullamcorper interdum risus parturient penatibus vivamus at mattis nibh hac nisl ullamcorper a.</p>
-    <p>Vestibulum a a posuere scelerisque faucibus nulla posuere scelerisque duis semper aliquam mus justo parturient cum a erat sagittis. Adipiscing vestibulum penatibus senectus sit ac natoque diam commodo a sit phasellus scelerisque eleifend id posuere. Nulla elementum velit posuere condimentum at facilisis ullamcorper quam ac tellus a suscipit parturient velit bibendum nam ridiculus leo.</p>
-    <p>Nascetur pulvinar hac habitasse in parturient odio rhoncus montes cubilia etiam orci quis condimentum condimentum et condimentum. Nam vel quis feugiat pretium ad parturient a lacus mollis fusce torquent at donec duis a ullamcorper massa neque litora ullamcorper adipiscing id egestas scelerisque primis consectetur a. Penatibus ut ac suspendisse congue a nulla a lectus magnis condimentum bibendum auctor consectetur mi tristique cras. Velit suspendisse parturient nascetur ac proin class amet ad vestibulum tempor justo etiam ornare dignissim adipiscing a</p>
-    <p class="twitter">Have anything to say? Tweet at me <a href="https://twitter.com/cmmn_nighthawk">@cmmn_nighthawk</a>!</p>
+
+    <p> A few months ago, a friend asked me if I could review his code.  He was applying to be an instructor at a summer coding program for high school students, and as part of the interview process they asked him to put together tic-tac-toe written in Ruby to be played in the terminal.</p>
+    <p>My friend's code was fine, and it worked nicely (after a few tweaks), but it violated a few of the major principles of good object-oriented programming.  Specifically 1. there were only two classes so, the code was not modular and 2. most of the methods were many lines too long and difficult to read.</p>
+    <p>I gave him my advice, but I think he was on a pretty tight deadline.  I had a tiny itch to build it out myself, properly, but I put that idea on a shelf for a while.  Until recently, when I saw that to apply to an impressive web development program, they asked you to send an implementation of tic-tac-toe.</p>
+    <p>I initially thought the exercise might be a poor use of time, and that I was better than writing games for the terminal (which I used to do a lot of, when learning Ruby).  But I now saw that that was a <em>terrible</em> attitude.  The analogy that I came up with was a golfer playing an easy course.  There is no such thing as any course being too easy.  Instead, an excellent golfer should just be able to crush a round of golf there.</p>
+    <p>Like everything else I have ever programmed, I underestimated the scope of work and amount of time this would take.  But it turned out to be extremely interesting and a valuable exercise.  Please find the <a href="https://github.com/common-nighthawk/tic-tac-toe">code available on GitHub</a>.  Here is what I learned--</p>
+
+    <h5 class="blog-title left">Ruby != Rails</h5>
+    <p>I work in Rails all day long at my job, so it was refreshing to work on pure Ruby.  I think we all need to be constantly reminded that Ruby and Rails are not the same.  Additionally, a lot of the magic that Rails provides becomes more clear the deeper you understand Ruby.</p>
+    <p>It was a blast-from-the-past in the best possible way to write the following:
+    <code>def initialize</code>,
+    <code>attr_accessor</code>,
+    <code>require_relative 'cell'</code>.
+    It felt lovely to get back to some of the basics.</p>
+
+    <h5 class="blog-title left">Create Lots of Classes</h5>
+    <p>I don't know why, but I think all of us are hesitant to create new classes.  Additional classes allow us to keep code modular and to separate concerns.  I think we should aggressively look to create new classes wherever possible.  Especially in Rails, we should not be afraid to make a class that doesn't inherit from ActiveRecord::Base.</p>
+    <p>By way of example, I like my Cell class.  It is super tiny (13 lines).  I created it so that I could have an object responsible for knowing its value and position.  But I had a tendency to add all logic to the Board class.  When I was asking the Board to see if a Cell was open, it was a clear violation of separation of concerns.  I created the <code>#is_open?</code> instance method in Cell and everything immediately felt more right.</p>
+    <p>Additionally, when I was writing too much game logic in the Board class it seemed reasonable to create a new class called GameLogic.</p>
+    <p>For me, I find it very helpful when the contents of each of my files can fit on one screen.  It is easier to know exactly what is going on within class if I can see everything at once.  I think this is a nice rule-of-thumb to prevent classes from swelling, and having one class that does/knows about everything.  If your code is running off one screen, think about how you can break it down/separate it out into another class</p>
+
+    <h5 class="blog-title left">Know Your Ruby Methods</h5>
+    <p>Ruby provides you with some pretty amazing methods that come built-in for free.  It is often easier to write your own methods than seeing if one exists to do that job; that allows you to keep on coding and not look through the docs.  But your method will be less elegant, less readable, and less performant.  Specifically, Array and Enumerable have incredibly specific methods that can get you out of almost any pinch.  I learned about <code>#all?</code>, <code>#any?</code>, <code>#none?</code> on this project.  I also had occasion to use <code>#each_with_slice</code> and <code>#group_by</code>.
+    <p>These methods do amazing things.  To keep your code readable, maintainable, and beautiful, I encourage everyone to read through the documentation whenever the "I probably need to write this method definition myself" thought occurs.</p>
+
+    <h5 class="blog-title left">Above All Else, Your Code Should be Readable</h5>
+    <p>There is a <a href="https://www.youtube.com/watch?v=DC-pQPq0acs">really good talk</a> by Ben Orenstein about refactoring.  In it, he says that a method definition that is more than one line is a code smell.  At first, this kind of sounds like a joke.  But the more you think about it, the truer it seems.  When building tic-tac-toe, there are no performance or scaling issues to be concerned with.  More than anything, the intentions of you code should be crystal clear.  It is entirely plausible that you will come back 6 months from now to refactor, or someone else will look to include parts of this code in something new they are building, or this game will be extended (with a computer player, for example).  Therefore, more than anything your code should be readable and easy to understand.</p>
+    <p>To do this, keep your method definitions should.  Create clear names.</p>
+    <p>In my UI class I have a method <code>#print_blank_line</code>.  It is a private method that is one line that does this <code>print "\n"</code>.  Because it is only one line, I am not saving any lines with this method; in fact, I am losing two with the <code>def</code> and <code>end</code>.  But rather than clutter up my code with lots of ugly print statements, I think this makes the code more readable and the intentions more clear.</p>
+    <p>A similar example can be found in the Board class with <code>#set_winner</code>.
+
+    <h5 class="blog-title left">Pre-planning Is Important</h5>
+    <p>Pseudocoding and mapping out a plan before coding is tremendously important.  But for some reason, I rarely do it when working on my own projects.  I have no doubt that the upfront investment of time is saved over the course of the project.  My theory is simply that this step is not fun; writing methods and plans on paper alone is just not as fun as diving into the code.  I always regret this an hour or two in, and this time was no exception.</p>
+    <p>I initially modeled the tic-tac-toe board as an array of arrays.  I think this is the most obvious approach when dealing with an NxN grid.  But when it came time to get the user's input, I realized I couldn't ask them to pick a move by inputting an array.  So on the front-end, I was calling the calls 1 through 9 and on the backend I was mapping those to array coordinates.  It required a lot of translating (I made a map that was a constant), that started to feel like it was more work that it was worth.</p>
+    <p>As a result, I made the decision to drop the array-of-array model and refer the cells by number (1 to 9) throughout the code.  This worked nicely, until it came time to write the methods to check if the game had been one.  For obvious reasons, the values [1, 1], [2, 2], [3,3] have more in common than 1, 5, 9.</p>
+    <p>I was able to work through the problem fine, but there was no need for this to be a surprise.  This problem could have been identified upfront, and a logic solution thought through.  Instead, I was making decisions on the fly based on code I had already sunk into the project.</p>
+
+    <h5 class="blog-title left">Take Breaks</h5>
+    <p>This is also something I struggle with.  I believe it is important to take breaks when writing code.  It is easy to keep saying "I'll take a break once I get this one piece working."  But then that once piece takes you down a rabbit hole, and it's connected to this other thing that will just take one minute to fix, which cannot be done before this quick refactor.</p>
+    <p>I think there are two reasons to force yourself to step away.  The first is that whenever I start to get cranky that the code isn't doing what I expect, I am significantly more likely to introduce technical debt.  When writing code while frustrated, it is easy to skip best practices in exchange for instant positive feedback.  This is almost always a mistake.</p>
+    <p>The second reason is that time away from the screen always brings perspective.  It has happened to me so many times that after hacking away fruitlessly on the keyboard the last hour of the day, I'll pack up my stuff and the answer will come to me within my first few minutes of my ride home.  Whatever it takes, tear yourself away from the screen.  Having heard and experienced this so often, I am out of excuses to not do this.</p>
+
+    <h5 class="blog-title left">Refactoring Is Never Done</h5>
+    <p>I thought I was finished with this project about 5 times before I stopped going back to it.  I just couldn't help myself.  I think this is a huge part of the fun of writing code.  But I think shifting the mindset that something will never be completely finished or 100% optimized is helpful.</p>
+    <p>Additionally, it is useful to think about the returns gained from additional improvement.  Often they are so small, that it genuinely is not worth the time.</p>
+    <p>With that said, I regret not creating a separate class for Player.  I think that would clean up all of the logic related to turns in the Board class.  And I am very unhappy with the logic to check if there is a diagonal win on the board.</p>
+
+    <hr><p class="twitter">Have anything to say? Tweet at me <a href="https://twitter.com/cmmn_nighthawk">@cmmn_nighthawk</a>!</p>
   </div>
 </body>
 </html>

@@ -18,6 +18,12 @@ td { text-align: center; }
 .blog-title a { color: #2f2f2f; }
 h6.blog-title.center + p { margin-top: 30px; }
 p.twitter { font-style: italic; }
+h5.blog-title {
+  font-size: 18px;
+  text-decoration: underline;
+  margin: 0 0 10px 0;
+  padding: 0;
+}
 
 @media (max-width: 767px) {
   .main { margin: 50px 50px; }
