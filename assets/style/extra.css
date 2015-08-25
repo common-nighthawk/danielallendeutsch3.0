@@ -1,12 +1,16 @@
 .slogan { color: #eb6864 }
 
-.main { margin: 50px 100px; }
+.main { margin: 50px 250px; }
+.main.skills { margin: 50px 100px; }
 
 body { color: #2f2f2f; }
 
 ul { padding-left: 15px; }
 li { padding-bottom: 5px; }
-td { text-align: center; }
+td {
+  text-align: center;
+  border: 1px solid #dddddd;
+}
 
 .blog-title {
   padding-left: 0;
@@ -25,6 +29,15 @@ h5.blog-title {
   padding: 0;
 }
 
+@media (min-width: 992px) and (max-width: 1199px) {
+  .main { margin: 50px 200px; }
+  .main.skills { margin: 50px 75px; }
+}
+@media (min-width: 768px) and (max-width: 991px) {
+  .main { margin: 50px 150px; }
+  .main.skills { margin: 50px 50px; }
+}
 @media (max-width: 767px) {
   .main { margin: 50px 50px; }
+  .main.skills { margin: 50px 25px; }
 }
