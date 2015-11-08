@@ -39,6 +39,7 @@ img {
   border-radius: 5%;
 }
 
+span { font-style: italic; }
 .social-icon { width: 48%; }
 h5.social { visibility: hidden; }
 
