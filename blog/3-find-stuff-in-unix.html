@@ -21,17 +21,17 @@
   </div>
   <div class="row main">
     <h3 class="blog-title center">Finding Stuff in Unix</h3>
-    <h6 class="blog-title center">November 10, 2015</h6>
+    <h6 class="blog-title center">November 16, 2015</h6>
 
     <p>
       If you're anything like me, you are always trying to find <span>stuff</span> on your computer.
     </p>
     <p>
       "Where did I save that file?  Is it buried in my home folder or on my desktop?"
-      "Hm... I'm not sure where the config file is saved for this program."
+      "Hm... I'm not sure where the config file for this program is stored."
     </p>
     <p>
-      Or perhaps someone calls you over because they need help looking at an EC2 instance used for the staging server, which is acting funky.
+      Or perhaps someone calls you over because they need help looking at an EC2 instance used for the staging server&mdash;it's acting funky.
       You current knowledge about what this box does is tangential at best.
     </p>
     <p>The solution is easy.  Search for it!</p>
@@ -44,15 +44,103 @@
     <p>Let's go through them one-by-one.</p>
 
     <h5 class="blog-title left">Searching For a File</h5>
+    <p><code>find -type f</code></p>
+    <p>'find' takes a directory and looks recursively through it.</p>
+    <p>Pass that you want a 'file' through the -type flag.</p>
+    <p>Pass the name of the file through the -name flag (or -iname for case insensitive).</p>
+    <p>The file must exactly match the name to return a result.
+    If you do not know the exact name of the file, you can use * (asterisk), the wildcard matcher.</p>
+    <p>Let's look at some examples:</p>
 
+    <div class="examples">
+      <p><span>I am looking for 'example.txt'.  I know I saved it in my home folder.</span></p>
+      <pre>find ~/ -type f -name example.txt</pre>
 
-    <h5 class="blog-title left">Searching For Text Within a File</h5>
+      <p><span>I am looking for all css files in my blog folder.</span></p>
+      <pre>find ~/blog -type f -name *.txt</pre>
 
+      <p><span>I am looking for a file with 'ellowor' in the name. I know I saved it somewhere.</span></p>
+      <pre>find / -type f -name *ellowor*</pre>
+    </div>
+
+    <p><code>locate</code></p>
+    <p>'locate' is a newer and non-standard command, so it is not available on all operating systems.</p>
+    <p>However, it is faster and better designed to find files when their location is unknown.</p>
+
+    <div class="examples">
+      <p><span>I am looking for a file with 'elephant' in the name across my machine.</span></p>
+      <pre>locate elephant</pre>
+
+      <p><span>I am looking for a file with 'eLePhAnt' in the name across my machine, but do not remember which letters are capitalized.</span></p>
+      <pre>locate -i elephant</pre>
+    </div>
 
     <h5 class="blog-title left">Searching For a Directory</h5>
+    <p><code>find -type d</code></p>
+    <p>Good news&mdash;searching for a directory uses the same 'find' command.</p>
+    <p>The only difference is the -type flag, which now take 'd'.</p>
 
+    <div class="examples">
+      <p><span>I am looking for a directory named 'my-files'.  I know it is nested in the home folder.</span></p>
+      <pre>find ~/ -type d -name my-files</pre>
 
-    <hr><p class="twitter">Have anything to say? Tweet at me <a href="https://twitter.com/cmmn_nighthawk">@cmmn_nighthawk</a>!</p>
+      <p><span>I am looking for all folders with 'important' in the name across my computer.</span></p>
+      <pre>find / -type d -name *important*</pre>
+    </div>
+
+    <p>
+      If you are looking for either a file or directory, you can just leave off the -type flag
+      and results of both will be returned.
+    </p>
+
+    <h5 class="blog-title left">Searching For Text Within a File</h5>
+    <p><code>grep</code></p>
+
+    <p>
+      Have you ever been on a page on a web browser, looking for something specific, and your co-worker suggested you 'grep for it'.
+      'Oh... just hit control F?'
+      Let's explain why the word grep is used as a synonym for 'search for'.
+    </p>
+
+    <p>'grep' searches through a file or files looking for text matches within the document(s).  It is NOT recursive by default.</p>
+    <p>If you want to recursively search through a folder, use the -r flag.</p>
+    <p>This command WILL return partial matches, so if you grep for 'elloworl' the text 'helloworld' would be returned.</p>
+    <p>A final set of examples:</p>
+
+    <div class="examples">
+      <p><span>I am looking to see if the file ~/poem.txt has the world 'sound' in it.</span></p>
+      <pre>grep sound ~/poem.txt</pre>
+
+      <p><span>Which of the .css files in my lists folder has the text 'twitter'?</span></p>
+      <pre>grep twitter ~/lists/*.css</pre>
+
+      <p><span>Of all the files in my important directory, which contain the word 'apple'?</span></p>
+      <pre>grep -r apple ~/important/</pre>
+
+      <p><span>Where did I save that file?  The only thing I remember about it is that 'amphibian' is in it.</span></p>
+      <pre>grep -r amphibian /</pre>
+    </div>
+
+    <h5 class="blog-title left">Wrapping Up</h5>
+      <p>
+        It is important to note that all of these commands are far more powerful than what I went over.
+        For example, searching with regex is a common usecase.
+        As is limiting the depth of recursive searches.
+        The man pages have the full details for each command.
+        But I hope this has you covered for your most common searches.
+      </p>
+      <p>
+        To recap, use <code>find</code> to search for file and folder names.
+        This command is recursive, and requires wildcard(s) for partial matches.
+      </p>
+      <p>
+        Use <code>grep</code> to search for text within a file.
+        This command is not recursive by default, but can be with the -r flag.
+        grep does return partial matches.
+      </p>
+    </h6>
+
+    <hr><p class="twitter">Have anything to say? Questions or feedback? Tweet at me <a href="https://twitter.com/cmmn_nighthawk">@cmmn_nighthawk</a>!</p>
   </div>
 </body>
 </html>

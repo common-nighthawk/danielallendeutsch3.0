@@ -30,6 +30,10 @@ h5.blog-title {
   padding: 0;
 }
 
+.examples {
+  margin: 0 15px 10px 15px;
+}
+
 .iframe-wrapper {
   position: relative;
   padding-bottom: 56.8%;
