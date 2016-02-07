@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Daniel Allen Deutsch</title>
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootswatch/3.3.0/journal/bootstrap.min.css">
+  <link rel="stylesheet" href="../assets/style/main.css">
+  <link rel="stylesheet" href="../assets/style/extra.css">
+  <link rel="icon" type="image/jpg" href="../assets/images/ddd-about.jpg">
+  <script src="../assets/javascript/ga.js"></script>
+</head>
+<body>
+  <div class="row header">
+    <a class="no-underline" href="../index.html">
+      <h1>Daniel Allen Deutsch</h1>
+      <h4 class="title">Web Developer</h4>
+    </a>
+    <h3 class="slogan"><a class="no-underline" href="../blog.html">Blog</a></h3>
+  </div>
+  <div class="row main ssl-blog">
+    <h3 class="blog-title center">SSL and HTTPS: Part II</h3>
+    <h4 class="blog-title center">a comprehensive (sort of) beginners guide</h4>
+    <h6 class="blog-title center">February 8, 2016</h6>
+
+
+    <h5 class="blog-title left">Setting Up Secure</h5>
+    <p>
+      We'll continue with the example presented in the
+      <a href="4-ssl-and-https-beginners-guide.html">previous post</a>
+      about our dentist.
+      Because we are going to transmit sensitive information on our website,
+      we decided to encrypt the data it sends by using HTTPS.
+    </p>
+    <p>
+      Setting this up is surprisingly easy. Unfortunately, it is webserver
+      specific and out of scope for this post.
+      But basically, you just need to set
+      some flags in your Apache/Nginx/etc config files.
+      You'd need to look up the specifics, but essentially you just set
+      <code>secure = true</code>.
+    </p>
+    <p>
+      With that, you are halfway there.  Now you just need an SSL Certificate,
+      and to tell your webserver where that certificate lives.
+    </p>
+
+    <h5 class="blog-title left">What is SSL?</h5>
+    <p>
+      There are a number of places you can buy an SSL certificate.
+      For no good reason, I like
+      <a href="https://www.namecheap.com/security/ssl-certificates.aspx">namecheap</a>.
+    </p>
+    <p>
+      There are two main criteria when looking at SSL Certs.
+      1.  What is the level of trust that I need. and
+      2.  How many domains do I need covered?
+    </p>
+
+    <h5 class="blog-title left">Trust</h5>
+    <p>
+      Looking at the first category: if you are a global bank, you need
+      <em>a lot</em> of trust. For a customer to give you a significant amount
+      of money, they need to know that you are who you say you and that
+      you are keeping their stuff safe.  If you are a dentist, it's fair
+      the say the level of trust is less.
+    </p>
+    <p>
+      Because of that, you can buy a really expensive SSL cert that says to
+      the world, "You can trust everything about this website."
+      This cert costs a lot of money, because the certificate authorizer
+      calls the company and talks to people and makes sure
+      they are who they say they are. I don't know any of the specifics,
+      but there is a complex vetting process that allows a certificate
+      to be issued that convey "super high level of trust here".
+    </p>
+    <p>
+      The level of certification is available for review in the address bar.
+      This is what it looks like when I log into my bank account&mdash;
+      <div><img src="../assets/images/ssl-strong.png"></div>
+    </p>
+    <p>
+      That big green box lets everyone know, PNC paid a lot of money
+      to be properly vetted.  They are who they say they are and
+      they encrypt their data.  You can trust them.
+    </p>
+    <p>
+      Digging down a little deeper, let's look at The New York Times.
+      When I browse articles on their website, there is no need to
+      encrypt the information.  They can send articles as plain-text
+      back and forth.  This is what the url bar looks like&mdash;
+      <div><img src="../assets/images/ssl-none.png"></div>
+    </p>
+    <p>
+      But when I log in to my account at The New York Times, things change.
+      In this section of the website, they keep addresses and take
+      credit card information.  Here is the url bar&mdash;
+      <div><img src="../assets/images/ssl-weak.png"></div>
+      This says that the site is secure and trusted, but the level of
+      trust is not as high as the first image.  That is, this cert
+      is cheaper and there was less vetting.
+    </p>
+
+    <h5 class="blog-title left">Domains</h5>
+    <p>
+      This section is the less interesting of the two.
+      The more subdomains your website has, the more expensive your SSL cert is.
+      That is, as dentist you may only have 'greatdentist.com'.
+      But some people have 'https://foo.mywebsite.com' and 'https://bar.mywebsite.com'.
+      The more subdomains you have, the price goes up.
+      You can buy a wildcard cert, that covers everything.  'https://*.mywebsite.com'.
+    </p>
+
+    <h5 class="blog-title left">More with SSL</h5>
+    <p>
+      A basic SSL cert is ~$10.  A wildcard cert is ~$100.
+      And a top-of-the-line enterprise cert is ~$1,000.
+    </p>
+    <p>
+      I bought my certificate... but now what?
+      Well, follow the instructions.  The implementation details are outside
+      the scope of this discussion.  Trust be told, this is the part that
+      took me longer than it should have.
+      But basically, you need to 'activate' the cert by filling out some questions
+      and the issuer will send it to you via email.
+      Then you need to transform the file sent to you to a CSR, which
+      is just another file type.
+      (There are lots of good resources with
+      <a href="https://www.namecheap.com/support/knowledgebase/article.aspx/467/67/how-do-i-generate-a-csr-code">instructions </a>
+      .)
+      Then copy that file onto your server, and update the webserver config
+      files to let it know where it is saved.
+    </p>
+    <p>
+      The file itself looks like a bunch of letters and numbers, but everything
+      you've been approved for is hidden in that text.  And whenever someone
+      goes to that address the level of trust is known and displayed.
+    </p>
+
+    <h5 class="blog-title left">This Raises Some Questions</h5>
+    <p> Q: Why isn't every website secure? </p>
+    <p>
+      A: They should be.  And they probably will be soon.  But right now,
+      you can't force everyone to buy an SSL cert. More on this in a minute.
+    </p>
+
+    <p> Q: Why do SSL certs cost money? </p>
+    <p>
+      A: The company that issues the certs needs to make money.
+      These companies know how to vet applications and have the resources to do it.
+    </p>
+
+    <p> Q: Can I make my site secure without an SSL cert? </p>
+    <p>
+      A: Yes. These things are not intrinsically coupled.  There is nothing that stops
+      you from changes the settings on your webserver config to <code>secure = true</code>
+      and not buying an SSL.
+      However, when the web browser sees there is no valid SSL it issues a
+      <a href="http://cdn.inmotionhosting.com/support/images/stories/website/errors/ssl/chrome-your-connection-is-not-private.png">BIG warning to the user</a>.
+      So while technically this can be done, it is not practical for any
+      consumer-facing website.
+    </p>
+
+    <h5 class="blog-title left">The Future</h5>
+    <p>
+      It only makes sense for all sites to be secure. I press you to think of
+      a usecase where insecure is preferred. It's not much extra work, and
+      better to be safe than sorry.
+    </p>
+    <p>
+      For this reason,
+      <a href="https://blog.mozilla.org/security/2015/04/30/deprecating-non-secure-http/">Mozilla recently</a>
+      announced they are phasing out HTTP in Firefox.
+      It is already deprecated.
+      Google has
+      <a href="https://www.chromium.org/Home/chromium-security/marking-http-as-non-secure"> the same plans </a>
+      with Chrome.
+    </p>
+    <p>
+      To make this a reality, it is now possible to get free (basic)
+      SSL Certificates.
+      <a href="https://letsencrypt.org/">Let's Encrypt</a>
+      is a public benefit corporation (backed by big tech sponsors)
+      that grant certs for $0.  They do not issue fancy certs
+      and it looks like they are quicker to expire, but
+      it is illustrative of the directions thing are moving in.
+      Because without free SSL certificates, it is not reasonably
+      possible to require all sites to use HTTPS.
+    </p>
+
+    <h5 class="blog-title left">Wrapping Up</h5>
+    <p>
+      I hope some aspects of HTTPS and SSL are clearer than they were before.
+      I'm not an expert, I just changed two SSL certs that lapsed.
+      If I've got something wrong, just let me know!!
+    </p>
+
+
+    <hr><p class="twitter">Have anything to say? Questions or feedback? Tweet at me <a href="https://twitter.com/cmmn_nighthawk">@cmmn_nighthawk</a>!</p>
+  </div>
+</body>
+</html>

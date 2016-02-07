@@ -20,11 +20,149 @@
     <h3 class="slogan"><a class="no-underline" href="../blog.html">Blog</a></h3>
   </div>
   <div class="row main">
-    <h3 class="blog-title center">SSL and HTTPS:</h3>
-    <h4 class="blog-title center">a comprehensive beginners guide</h4>
-    <h6 class="blog-title center">December 1, 2015</h6>
+    <h3 class="blog-title center">SSL and HTTPS: Part I</h3>
+    <h4 class="blog-title center">a comprehensive (sort of) beginners guide</h4>
+    <h6 class="blog-title center">January 30, 2016</h6>
 
-    <p>story about setting it up my first time.</p>
+
+    <h5 class="blog-title left">Backstory</h5>
+    <p>
+      A month or two ago, an SSL certificate expired for a website we use internally.
+      It just so happened to be the day before my boss was leaving for a vacation, so he asked me if I could update it the next day.
+    </p>
+    <p>"I don't know anything about SSL," I said.  "But if you think it's something I can do&mdash;then sure."</p>
+    <p>"It's easy.  Just buy a new certificate and follow the instructions."</p>
+    <p>
+      Like everything I've ever done with computers or the internet, it wasn't easy.
+      And what should have taken 1 hour took about 4.
+      But it was true&mdash;all I needed to do way pay $10 and follow some instructions.
+      To my great amazement, it actually worked with my first attempt changing code on the server.
+      I patted myself on the back and called it a day.
+    </p>
+    <p>
+      When people went to the page, it no longer said
+      "<a href="http://cdn.inmotionhosting.com/support/images/stories/website/errors/ssl/chrome-your-connection-is-not-private.png">Your connection is not private</a>".
+      I fixed it, and it worked.
+    </p>
+    <p>
+      A few weeks later I had to do it again.  (We really need to do a better job of renewing these in advance.)
+      It was only this time that I realized I had no idea what'd actually done the first time.  Like, um, what it SSL
+      and how is it related to HTTPS.
+    </p>
+    <p>I ended up down a few rabbit holes, and this is what I learned. We'll start at the very beginning.</p>
+
+
+    <h5 class="blog-title left">The Setup</h5>
+    <p>Let's say you are a dentist, and you want to make a website.  Cool!</p>
+    <p>
+      You write up some HTML and CSS on your local computer.  The page includes the hours your office is open,
+      why you are an awesome dentist, and the phone number.  It has lots of pictures and it looks awesome.
+    </p>
+    <p>
+      Okay&mdash;now it's time to get this on the internet, so that people can visit it.
+      You do some research and Amazon EC2 seems like a good option for hosting.
+      (It isn't, because it's more expensive and complicated for what you need.  But it allows full control, so it will serve nicely throughout the example.)
+    </p>
+    <p>
+      Wait... what exactly <span>is</span> a server?  Well, it's really just a computer that is connected to the internet.
+      And if it serves web pages, it grants public access that allows everyone who pings it to see some of its saved files.
+      It's just like your computer, except that someone else owns it, it's always on, always connected to the internet, and probably doesn't have a monitor.
+    </p>
+    <p>
+      (This skips over the fact of virtualization.  Mostly because I don't know much about it.  But the truth is that someone like
+      AWS really has one big computer that they can make act like 100 little computers through virtualization.  But no understanding of that
+      is necessary for this.)
+    </p>
+    <p>
+      Once you have a server, you copy over your HTML and CSS files from your computer to your public server.
+      Then, just like that, you have a website anyone can access.  You did it!
+    </p>
+    <p>
+      Right now, your website will only be accessible through its IP address.
+      An IP address is just a unique identifier of that computer on the internet.
+      Your personal computer has an IP address too, because it connects to the internet.
+      You just don't have a reason to use it.
+    </p>
+    <p>
+      Because you don't want people to type in '123.123.123.123' in the url bar to get to your wonderful site,
+      you purchase the domain name 'greatdentist.com'.  You then configure that name to point to your
+      IP address by setting up the DNS.  (I apologize for glossing over this, but I don't want to stay too far.)
+    </p>
+    <p>
+      Ta-da!  Awesome job.  Now people go to 'http://greatdentist.com' and they see the neat site you wrote in HTML and CSS
+      on your home computer.
+    </p>
+    <p>All is well in the world.  But... where does SSL and HTTPS come in?</p>
+
+
+    <h5 class="blog-title left">How the Internet Works (sort-of)</h5>
+    <p>
+      When you surf the web, you are using HTTP protocol.
+      (There are a few other protocols, like FTP for files and SMTP for email, but we're just going to discuss HTTP.)
+      When you request a page over HTTP, all of the information is sent over wires as plain text.
+    </p>
+    <p>
+      So, if you go to <a href="http://www.nytimes.com">nytimes.com</a>, you will hit
+      a server managed by The New York Times.  They will pass to your computer over cables
+      the HTML and CSS that page is made of as plain text.
+    </p>
+    <p>
+      What are the implications of this?  It means that if you are sitting at Starbucks, everyone else connected to the same network
+      can see everything you are doing.  The page you are looking at, the email you just sent, and the password you entered
+      are all visible.  And that's because you are passing everything back and forth as plain text.
+    </p>
+    <p>
+      (I don't know the details about this process.  But I do know that it's fairly easy to do.
+      <a href="http://www.pcworld.com/article/2043095/heres-what-an-eavesdropper-sees-when-you-use-an-unsecured-wi-fi-hotspot.html">Here is an example</a>.)
+    </p>
+    <p>
+      So for my website as a dentist, this is not a problem.
+      Everything on the site is public, no one is entering passwords, etc.
+      Therefore, this is of no concern to me; I am in the clear.
+    </p>
+    <p>
+      Until I decide to get fancy.  The website is working <span>so</span> well,
+      that I'm going to add a form for patients to enter their personal information.
+      You know when you go to the dentist and you have to fill out a bunch of paperwork before
+      the appointment?  Well that sucks, so we're going to move it online so people can do it in advance.
+    </p>
+    <p>
+      But... uh oh.  Now there is sensitive information being passed through my website.
+      It is important that a customer's social security numbers cannot be intercepted.
+      Therefore, the information will need to be encrypted.  And this is where HTTPS comes in.
+    </p>
+
+    <h5 class="blog-title left">Into to HTTPS</h5>
+    <p>
+      HTTPS is similar to HTTP, except that it is <em>secure</em>.
+      It is secure because it encypts the data being sent back and forth
+      across the wire, so that is in no longer plain text.
+    </p>
+    <p>
+      Encryption is an enormous topic and well outside the scope of this post.
+      But if you log into a website the this password 'mypassword', it
+      will encrypt that string and send it as '$2a$10$YOS1xln9uNZKpJSoolsNWuCp.K/fLtZ3Qp75H3EGbrg'.
+      When the e
+      how to un-encrypt everything it was sent.
+    </p>
+      Thus, the server and the client interact in the same way.
+      But if the message is intercepted on the way, it will not be readable.
+    <p>
+      The server can decrypt the message, but the guy sitting in Starbucks cannot.
+      This is not because the guy sitting in Starbucks is stupid,
+      because he does not have the secret code that allows the text
+      to be un-encrypted.
+    </p>
+
+    <h5 class="blog-title left">Next Post</h5>
+    <p>
+      This begs two questions.
+      1.  Why isn't everything done over HTTPS.
+      2.  Where does SSL fit in.
+      We'll cover that in the
+      <a href="6-ssl-and-https-part-2.html">second half</a>
+      of this two-part post.
+    </p>
 
     <hr><p class="twitter">Have anything to say? Questions or feedback? Tweet at me <a href="https://twitter.com/cmmn_nighthawk">@cmmn_nighthawk</a>!</p>
   </div>

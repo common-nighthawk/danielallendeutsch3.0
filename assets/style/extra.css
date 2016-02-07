@@ -62,3 +62,8 @@ h5.blog-title {
   .main { margin: 50px 50px; }
   .main.skills { margin: 50px 25px; }
 }
+
+.ssl-blog img {
+  max-height: 40px;
+  margin: 15px 0;
+}
