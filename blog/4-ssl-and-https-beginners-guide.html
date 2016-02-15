@@ -11,7 +11,7 @@
   <link rel="icon" type="image/jpg" href="../assets/images/ddd-about.jpg">
   <script src="../assets/javascript/ga.js"></script>
 </head>
-<body>
+<body class="container-fluid">
   <div class="row header">
     <a class="no-underline" href="../index.html">
       <h1>Daniel Allen Deutsch</h1>
@@ -46,10 +46,10 @@
     </p>
     <p>
       A few weeks later I had to do it again.  (We really need to do a better job of renewing these in advance.)
-      It was only this time that I realized I had no idea what'd actually done the first time.  Like, um, what it SSL
-      and how is it related to HTTPS.
+      It was only this time that I realized I had no idea what'd I'd actually done the first time.  Like, um, what it SSL
+      and how is it related to HTTPS?
     </p>
-    <p>I ended up down a few rabbit holes, and this is what I learned. We'll start at the very beginning.</p>
+    <p>I ended up down a few rabbit holes, and this is what I learned. We'll start at the beginning.</p>
 
 
     <h5 class="blog-title left">The Setup</h5>
@@ -61,7 +61,7 @@
     <p>
       Okay&mdash;now it's time to get this on the internet, so that people can visit it.
       You do some research and Amazon EC2 seems like a good option for hosting.
-      (It isn't, because it's more expensive and complicated for what you need.  But it allows full control, so it will serve nicely throughout the example.)
+      (It isn't, because it's expensive and complicated for what you need.  But it allows full control, so it will serve nicely throughout the example.)
     </p>
     <p>
       Wait... what exactly <span>is</span> a server?  Well, it's really just a computer that is connected to the internet.
@@ -70,7 +70,7 @@
     </p>
     <p>
       (This skips over the fact of virtualization.  Mostly because I don't know much about it.  But the truth is that someone like
-      AWS really has one big computer that they can make act like 100 little computers through virtualization.  But no understanding of that
+      AWS really has a big computer that they can make act like 100 little computers through virtualization.  But no understanding of that
       is necessary for this.)
     </p>
     <p>
@@ -84,15 +84,15 @@
       You just don't have a reason to use it.
     </p>
     <p>
-      Because you don't want people to type in '123.123.123.123' in the url bar to get to your wonderful site,
+      Because you don't want people to need to type in '123.123.123.123' in the url bar to get to your wonderful site,
       you purchase the domain name 'greatdentist.com'.  You then configure that name to point to your
-      IP address by setting up the DNS.  (I apologize for glossing over this, but I don't want to stay too far.)
+      IP address by setting up the DNS.  (I apologize for glossing over this, but I don't want to stray too far.)
     </p>
     <p>
       Ta-da!  Awesome job.  Now people go to 'http://greatdentist.com' and they see the neat site you wrote in HTML and CSS
       on your home computer.
     </p>
-    <p>All is well in the world.  But... where does SSL and HTTPS come in?</p>
+    <p>All is well in the world.  But... where do SSL and HTTPS come in?</p>
 
 
     <h5 class="blog-title left">How the Internet Works (sort-of)</h5>
@@ -104,7 +104,7 @@
     <p>
       So, if you go to <a href="http://www.nytimes.com">nytimes.com</a>, you will hit
       a server managed by The New York Times.  They will pass to your computer over cables
-      the HTML and CSS that page is made of as plain text.
+      the HTML and CSS that make up that page as plain text.
     </p>
     <p>
       What are the implications of this?  It means that if you are sitting at Starbucks, everyone else connected to the same network
@@ -128,11 +128,11 @@
     </p>
     <p>
       But... uh oh.  Now there is sensitive information being passed through my website.
-      It is important that a customer's social security numbers cannot be intercepted.
+      It is important that a customer's social security number cannot be intercepted.
       Therefore, the information will need to be encrypted.  And this is where HTTPS comes in.
     </p>
 
-    <h5 class="blog-title left">Into to HTTPS</h5>
+    <h5 class="blog-title left">Intro to HTTPS</h5>
     <p>
       HTTPS is similar to HTTP, except that it is <em>secure</em>.
       It is secure because it encypts the data being sent back and forth
@@ -140,9 +140,9 @@
     </p>
     <p>
       Encryption is an enormous topic and well outside the scope of this post.
-      But if you log into a website the this password 'mypassword', it
+      But if you log into a website with the password 'superman', it
       will encrypt that string and send it as '$2a$10$YOS1xln9uNZKpJSoolsNWuCp.K/fLtZ3Qp75H3EGbrg'.
-      When the e
+      When the message make it to the server, it knows
       how to un-encrypt everything it was sent.
     </p>
       Thus, the server and the client interact in the same way.
@@ -150,7 +150,7 @@
     <p>
       The server can decrypt the message, but the guy sitting in Starbucks cannot.
       This is not because the guy sitting in Starbucks is stupid,
-      because he does not have the secret code that allows the text
+      but because he does not have the secret code that allows the text
       to be un-encrypted.
     </p>
 
@@ -158,7 +158,7 @@
     <p>
       This begs two questions.
       1.  Why isn't everything done over HTTPS.
-      2.  Where does SSL fit in.
+      2.  Where does SSL fit in?
       We'll cover that in the
       <a href="6-ssl-and-https-part-2.html">second half</a>
       of this two-part post.

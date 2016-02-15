@@ -11,7 +11,7 @@
   <link rel="icon" type="image/jpg" href="../assets/images/ddd-about.jpg">
   <script src="../assets/javascript/ga.js"></script>
 </head>
-<body>
+<body class="container-fluid">
   <div class="row header">
     <a class="no-underline" href="../index.html">
       <h1>Daniel Allen Deutsch</h1>
@@ -22,7 +22,7 @@
   <div class="row main ssl-blog">
     <h3 class="blog-title center">SSL and HTTPS: Part II</h3>
     <h4 class="blog-title center">a comprehensive (sort of) beginners guide</h4>
-    <h6 class="blog-title center">February 8, 2016</h6>
+    <h6 class="blog-title center">February 15, 2016</h6>
 
 
     <h5 class="blog-title left">Setting Up Secure</h5>
@@ -60,20 +60,22 @@
 
     <h5 class="blog-title left">Trust</h5>
     <p>
-      Looking at the first category: if you are a global bank, you need
+      If you are a global bank, you need
       <em>a lot</em> of trust. For a customer to give you a significant amount
-      of money, they need to know that you are who you say you and that
-      you are keeping their stuff safe.  If you are a dentist, it's fair
-      the say the level of trust is less.
+      of money, they need to know that you are who you say you are
+      and that you are keeping their dollars and information safe.
+      If you are a dentist, it's fair the say the level of trust needed is less.
     </p>
     <p>
       Because of that, you can buy a really expensive SSL cert that says to
       the world, "You can trust everything about this website."
       This cert costs a lot of money, because the certificate authorizer
-      calls the company and talks to people and makes sure
-      they are who they say they are. I don't know any of the specifics,
+      calls the company and talks to people,
+      does independent research, etc.,
+      to make sure this company is who they claim.
+      I don't know any of the specifics,
       but there is a complex vetting process that allows a certificate
-      to be issued that convey "super high level of trust here".
+      to be issued that conveys "super high level of trust here".
     </p>
     <p>
       The level of certification is available for review in the address bar.
@@ -97,7 +99,7 @@
       In this section of the website, they keep addresses and take
       credit card information.  Here is the url bar&mdash;
       <div><img src="../assets/images/ssl-weak.png"></div>
-      This says that the site is secure and trusted, but the level of
+      This says that the site is secure and encrypted, but the level of
       trust is not as high as the first image.  That is, this cert
       is cheaper and there was less vetting.
     </p>
@@ -105,7 +107,7 @@
     <h5 class="blog-title left">Domains</h5>
     <p>
       This section is the less interesting of the two.
-      The more subdomains your website has, the more expensive your SSL cert is.
+      The more subdomains your website has, the more expensive your SSL cert.
       That is, as dentist you may only have 'greatdentist.com'.
       But some people have 'https://foo.mywebsite.com' and 'https://bar.mywebsite.com'.
       The more subdomains you have, the price goes up.
@@ -118,11 +120,12 @@
       And a top-of-the-line enterprise cert is ~$1,000.
     </p>
     <p>
-      I bought my certificate... but now what?
+      You bought my certificate... but now what?
       Well, follow the instructions.  The implementation details are outside
       the scope of this discussion.  Trust be told, this is the part that
       took me longer than it should have.
-      But basically, you need to 'activate' the cert by filling out some questions
+      But basically, you need to 'activate' the cert by filling out
+      some questions about your website and company
       and the issuer will send it to you via email.
       Then you need to transform the file sent to you to a CSR, which
       is just another file type.
@@ -135,7 +138,7 @@
     <p>
       The file itself looks like a bunch of letters and numbers, but everything
       you've been approved for is hidden in that text.  And whenever someone
-      goes to that address the level of trust is known and displayed.
+      goes to that url address the level of trust is known and displayed.
     </p>
 
     <h5 class="blog-title left">This Raises Some Questions</h5>
@@ -148,24 +151,24 @@
     <p> Q: Why do SSL certs cost money? </p>
     <p>
       A: The company that issues the certs needs to make money.
-      These companies know how to vet applications and have the resources to do it.
+      These companies know how to vet applications, but have obvious costs.
     </p>
 
     <p> Q: Can I make my site secure without an SSL cert? </p>
     <p>
       A: Yes. These things are not intrinsically coupled.  There is nothing that stops
-      you from changes the settings on your webserver config to <code>secure = true</code>
+      you from changing the settings on your webserver config to <code>secure = true</code>
       and not buying an SSL.
       However, when the web browser sees there is no valid SSL it issues a
       <a href="http://cdn.inmotionhosting.com/support/images/stories/website/errors/ssl/chrome-your-connection-is-not-private.png">BIG warning to the user</a>.
-      So while technically this can be done, it is not practical for any
-      consumer-facing website.
+      So while technically this can be done (encryption without SSL),
+      it is not practical for any consumer-facing website.
     </p>
 
     <h5 class="blog-title left">The Future</h5>
     <p>
       It only makes sense for all sites to be secure. I press you to think of
-      a usecase where insecure is preferred. It's not much extra work, and
+      a usecase where plain text is preferable. It's not much extra work, and
       better to be safe than sorry.
     </p>
     <p>
@@ -174,17 +177,17 @@
       announced they are phasing out HTTP in Firefox.
       It is already deprecated.
       Google has
-      <a href="https://www.chromium.org/Home/chromium-security/marking-http-as-non-secure"> the same plans </a>
+      <a href="https://www.chromium.org/Home/chromium-security/marking-http-as-non-secure">similar plans</a>
       with Chrome.
     </p>
     <p>
-      To make this a reality, it is now possible to get free (basic)
+      To make this a reality, it is now possible to get free
       SSL Certificates.
       <a href="https://letsencrypt.org/">Let's Encrypt</a>
       is a public benefit corporation (backed by big tech sponsors)
       that grant certs for $0.  They do not issue fancy certs
       and it looks like they are quicker to expire, but
-      it is illustrative of the directions thing are moving in.
+      it is illustrative of the directions thing are moving.
       Because without free SSL certificates, it is not reasonably
       possible to require all sites to use HTTPS.
     </p>
@@ -193,7 +196,7 @@
     <p>
       I hope some aspects of HTTPS and SSL are clearer than they were before.
       I'm not an expert, I just changed two SSL certs that lapsed.
-      If I've got something wrong, just let me know!!
+      If I've got something wrong, please let me know!
     </p>
 
 
