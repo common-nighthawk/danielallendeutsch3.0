@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Daniel Allen Deutsch</title>
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootswatch/3.3.0/journal/bootstrap.min.css">
+  <link rel="stylesheet" href="../assets/style/main.css">
+  <link rel="stylesheet" href="../assets/style/extra.css">
+  <link rel="icon" type="image/jpg" href="../assets/images/ddd-about.jpg">
+  <script src="../assets/javascript/ga.js"></script>
+</head>
+<body class="container-fluid">
+  <div class="row header">
+    <a class="no-underline" href="../index.html">
+      <h1>Daniel Allen Deutsch</h1>
+      <h4 class="title">Web Developer</h4>
+    </a>
+    <h3 class="slogan"><a class="no-underline" href="../blog.html">Blog</a></h3>
+  </div>
+  <div class="row main">
+    <h3 class="blog-title center">On Breaking Changes, and Getting Older</h3>
+    <h6 class="blog-title center">April 2, 2016</h6>
+    <!-- TODO -->
+    <h6 class="blog-title center">im still re-writing this post. please consider it not yet published.</h6>
+    <!-- TODO -->
+
+    <h5 class="blog-title left">What is a Breaking Change?</h5>
+    <p>
+      Let's build a contrived example to illustrate breaking changes.
+    </p>
+    <p>
+      We are managing a JSON API that has a user endpoint.
+      This is a valid call to the API:
+      <code>http://danielallendeutsch.com/api/users/1.json</code>.
+      It will return this response:
+<pre>{ 
+  "email": "danielallendeutsch@gmail.com",
+  "name": "Daniel Deutsch",
+  "profile": "danielallendeutsch.com"
+}</pre>
+    </p>
+
+    <p>
+      All is well in the world.  Until, for whatever reason, we need to update our database schema.
+      Instead of storing <code>email</code>, <code>name</code>, and <code>profile</code>,
+      we need to store <code>email</code>, <code>first_name</code>, <code>last_name</code> and <code>profile</code>.
+    </p>
+
+    <p>
+      Okay!  We update the database schema&mdash;and we are even clever enough to
+      migrate all of the existing users<a href="#footer-1"><sup>1</sup></a>.
+      But how do we handle our API?
+      There are 3 options:
+    </p>
+
+    <p>1. Backward Compatible: have the API return first_name, last_name, <span>and</span> name.</p>
+    <p>2. Versioning: create two APIs, one that supports the prior schema and one that supports the new schema.</p>
+    <p>3. Breaking Change: have the API return first_name and last_name.</p>
+
+    <h5 class="blog-title left">What Are the Implications?</h5>
+    <h6>Backward Compatible</h6>
+    <p>
+      There is nothing the speaks against delivering the new and the old at the same time.
+      Because the names do not conflict, it is possible to serve everything.
+      Sure, <code>name</code> no longer exists in the database.
+      But I can write a function that joins 
+      <code>first_name</code> and <code>last_name</code> with a space.
+    </p>
+    </p>
+      Here is the new response:
+<pre>{ 
+  "email": "danielallendeutsch@gmail.com",
+  "name": "Daniel Deutsch",
+  "first_name": "Daniel",
+  "last_name": "Deutsch",
+  "profile": "danielallendeutsch.com"
+}</pre>
+    </p>
+
+    <p>
+      Code that depends on the is API can access
+      <code>user['name']</code> and/or <code>user['first_name']</code>.
+      In real life, you could remove <code>name</code> from the documentation
+      and encourage the use of <code>first_name</code> and <code>last_name</code>.
+      But any old code that depends on <code>name</code> would not break.
+    </p>
+
+    <p>
+      Pros: for people consuming the API, everything just works.
+      Everything that used to work still does, plus there are new features.
+    </p>
+
+    <p>
+      Cons: as the developer, you need to write more code.
+      You are responsible for writing a function that wrangles
+      the new schema into something it is not.
+      Also&mdash;you are carrying around legacy code.
+    </p>
+
+    <h6>Versioning</h6>
+    <p>
+      It is possible to create two versions of the API.
+      <code>http://danielallendeutsch.com/api/v1/users/1.json</code> and
+      <code>http://danielallendeutsch.com/api/v2/users/1.json</code> are
+      both valid endpoints.
+    </p>
+    <p>
+      This is what they return, v1 and v2 respectively
+<pre>{ 
+  "email": "danielallendeutsch@gmail.com",
+  "name": "Daniel Deutsch",
+  "profile": "danielallendeutsch.com"
+}</pre>
+
+<pre>{ 
+  "email": "danielallendeutsch@gmail.com",
+  "first_name": "Daniel",
+  "last_name": "Deutsch",
+  "profile": "danielallendeutsch.com"
+}</pre>
+  </p>
+
+    <p>
+      In this situation, existing code that depends on your API is already using v1.
+      There are no changes to make for them.
+      New things that are created that use this API will be built against v2.
+    </p>
+
+    <p>
+      The pros and cons are similar to above.  Except consumers of the API
+      can no longer mix-and-match features.
+      Pros: it still works.  Cons: maintaining legacy code.
+    </p>
+
+    <h6>Breaking Change</h6>
+    <p>
+      What if <code>first_name</code> and <code>last_name</code> is just better than <code>name</code>?
+      And what if no one depends on the API except for you.
+      Then you can say fuck it, and return the new stuff.
+<pre>{ 
+  "email": "danielallendeutsch@gmail.com",
+  "first_name": "Daniel",
+  "last_name": "Deutsch",
+  "profile": "danielallendeutsch.com"
+}</pre>
+    </p>
+
+    <p>
+      This will break anything that expects <code>name</code> to be returned.
+      But it allows you to shed your legacy code.
+      It is not fun to maintain old code for 5+ years.
+    </p>
+
+    <p>
+      You can get away with this if can also change everything that depends on the API.
+      Or if you don't care if you break those things.
+    </p>
+
+    <h5 class="blog-title left">Why Do We Care?</h5>
+    <p>
+      I think when we're younger, a true breaking change seems impossible.
+      With every decision that is made, we only add to the options available.
+      Everything can be fixed, and mistakes are reversible.
+    </p>
+
+    <p>
+      But as we get older, the stakes get higher.
+      It becomes clear that breaking changes are possible&mdash;sometimes
+      we break dependencies and there is no going back.
+    </p>
+
+    <p>
+      Worst of all, we learn that the choices we make have the
+      real possibility of being the bad/wrong.
+      We tell each other that
+      "everything happens for a reason" and
+      "it wasn't meant to be" and
+      "30 is the new 40".
+      I think we say these things because if we didn't, we'd be paralysed
+      by fear, indecision, and regret.
+    </p>
+
+    <p>
+      But here is what is true:
+      <code>30 != 40</code>,
+      some decisions we make in life will make us less happy, 
+      worse off, than if we'd chosen differently.
+    </p>
+
+    <p>
+      I listened to a 
+      <a href="http://www.wbur.org/2016/01/28/not-so-simple-math-modern-love">beautiful story</a> 
+      recently.
+      In it, a woman decides to give up her son for adoption.
+      This is <span>not</span> backward compatible.
+      She made what she thought was the best decision at the time,
+      with the information she had.
+      It is impossible for anyone to say, 
+      but in the simplest sense&mdash;it
+      may have been the wrong decision.
+    </p>
+
+    <p>
+      There are some things in life that cannot
+      be hurried<a href="#footer-2"><sup>2</sup></a>.
+      Time and distance often affords perspective
+      that would have been nice to have sooner.
+    </p>
+
+    <p>
+      So what is the right thing to do when we realize we made a mistake?
+      Do we fight to revert the breaking change?
+      Or do we learn to live with our new reality?
+    </p>
+
+    <p>
+      I have no answers. I do not know how to optimize for happiness.
+    </p>
+
+    <p>
+      Recently, I made a big breaking change. I gave up on legacy code.
+      It was a mistake. I want my old schema back.
+      I love her and I miss her. I think my life will be worse.
+    </p>
+
+    <p>
+      With each passing year, the stakes only get higher.
+      The price of indecision and reverting increases.
+    </p>
+
+    <p>
+      So what did we learn?
+      1. Use deprecation warnings. Before implementing a breaking change,
+      do everything possible to make sure it's the right decision.
+      2. Life is tough, and only moves in one direction.
+      Do your best and try to enjoy it.
+    </p>
+
+    <!-- talk about specific regrets? -->
+
+    <hr>
+    <a name="footer-1"><sup>1<sup></a>
+    This ignores the fact that this is a very difficult problem.
+    In addition to the obvious edge cases of "Sue Ann" and "O'Connor",
+    internationalization opens an even bigger can of worms.
+    <br>
+    <a name="footer-2"><sup>2<sup></a>
+    A joke: a project manager says to his pregnant wife,
+    "How long until the baby is here?"
+    The wife says, "9 months.  That's how long it takes."
+    The husband says, "That's too long. What additional resources can I provide
+    to cut the time in half?"
+
+    <hr><p class="twitter">Have anything to say? Questions or feedback? Tweet at me <a href="https://twitter.com/cmmn_nighthawk">@cmmn_nighthawk</a>!</p>
+  </div>
+</body>
+</html>
