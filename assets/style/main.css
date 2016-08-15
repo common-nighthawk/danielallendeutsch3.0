@@ -18,6 +18,7 @@ h5 {
   margin-top: 20px;
   color: #314159;
 }
+p { margin: 0 0 14px; }
 
 .no-underline { text-decoration: none !important; }
 
@@ -40,6 +41,10 @@ img {
 }
 
 span { font-style: italic; }
+span#city, span#state {
+  font-style: initial;
+  text-transform: capitalize;
+}
 .social-icon { width: 48%; }
 h5.social { visibility: hidden; }
 
