@@ -20,6 +20,7 @@ h5 {
 }
 p { margin: 0 0 14px; }
 
+.bold { font-weight: bold; }
 .no-underline { text-decoration: none !important; }
 
 .photos {

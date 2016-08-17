@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Daniel Allen Deutsch</title>
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootswatch/3.3.0/journal/bootstrap.min.css">
+  <link rel="stylesheet" href="../assets/style/main.css">
+  <link rel="stylesheet" href="../assets/style/extra.css">
+  <link rel="icon" type="image/jpg" href="../assets/images/ddd-about.jpg">
+  <script src="../assets/javascript/ga.js"></script>
+</head>
+<body class="container-fluid">
+  <div class="row header">
+    <a class="no-underline" href="../index.html">
+      <h1>Daniel Allen Deutsch</h1>
+      <h4 class="title">Web Developer</h4>
+    </a>
+    <h3 class="slogan"><a class="no-underline" href="../blog.html">Blog</a></h3>
+  </div>
+  <div class="row main location-blog">
+    <h3 class="blog-title center">Project #2: My Location</h3>
+    <h6 class="blog-title center">start: August 18, 2016, end: -</h6>
+
+    <h5 class="blog-title left">Introduction</h5>
+    <p>
+      I recently left my full-time job in New York.
+      This deserves a dedicated blog post, and I plan to do that
+      once I can properly organize my thoughts.
+    </p>
+    <p>
+      But a big part of why I left is:
+      1. I want to spend time traveling and (what I've been calling) 'city shopping'.
+      2. I want to spend time building all sorts of fun tech projects.
+      Anything that makes me and/or other people happy is the only criterion.
+      Importantly, I'm hoping these projects will also drive learning in new areas for me.
+    </p>
+    <p>
+      On my <a href="../about.html">About</a> page, it says "Daniel is a web developer that lives in Brooklyn, New York."
+      That's no longer true! I want to update this so that it pulls in dynamically from my current location.
+    </p>
+    <p>
+      Mostly, I just think this is fun.
+      I like the idea of going somewhere for a weekend,
+      and my website updating automatically.
+      Realistically, there is no obvious benefit.
+      But maybe my family/friends will enjoy having a reliable way of knowing
+      where I am.
+    </p>
+
+    <h5 class="blog-title left">The Specs</h5>
+    <ul>
+      <li>
+        The <a href="../about.html">About</a> page should say:
+        "Daniel is a web developer currently living in {{city}}, {{state}}."
+      </li>
+      <li>No action is required for the city and state to update</li>
+      <li>My location is accurate within 24-hours</li>
+      <li>This website remains static: HTML, CSS, and JS only (no backend)</li>
+    </ul>
+
+    <h5 class="blog-title left">Initial Plan</h5>
+    <p>
+      I want this to work based on the location of my phone;
+      my phone is always on and always with me.
+      But I don't know much about mobile, so I'm going to build the first
+      iteration using the location of my laptop.
+    </p>
+    <p>
+      At a regular frequency (every hour?) I will post my location to a remote database.
+      I will then fetch the location with JavaScript on the client-side, on each page load.
+      Easy!
+    </p>
+
+    <h5 class="blog-title left">Approaches</h5>
+    <p>
+      This project appears to have 3 or 4 parts.
+      The first is the database, to store my location.
+      The second is the client-side code, to fetch the location.
+      The third is posting my location.
+      If I post all details related to my location, that's it.
+      But if I just post some information,
+      the fourth will be a service that transforms the given information
+      into everything required.
+    </p>
+    <h6 class="blog-title left">Database</h6>
+    <p>
+      I don't want to be bothered much with the DB.
+      My needs are small&mdash;I just want to store simple data remotely.
+      Therefore, it seems ridiculous to set up and maintain a dedicated server.
+    </p>
+    <p>
+      For this reason, I think
+      <a href="https://firebase.google.com/">Firebase</a>
+      will be a good fit.
+      I used it a while ago for a small project.
+      The major benefits are that:
+      1. I don't have to manage anything myself and
+      2. it's free(!) for non-enterprise projects.
+    </p>
+
+    <h6 class="blog-title left">Client-Side Fetching</h6>
+    <p>
+      This should be fairly simple.
+      Once the remote endpoint is set up correctly,
+      the location can be retrieved with <code>$.get</code>
+      and the DOM can be updated with <code>$(#city).html(city)</code>.
+    </p>
+
+    <h6 class="blog-title left">Posting the Location</h6>
+    <p>
+      This will be the hard part.
+      On first-pass, I will write a shell script that
+      uses my current IP address to determine my city and state.
+      Then post that to the remote Firebase DB.
+    </p>
+    <p>
+      I'm not great with bash, but I believe
+      simple APIs exist to find city/state from an IP.
+      I'm hoping I can accomplish everything with <code>curl</code>.
+    </p>
+    <p>
+      To run the script regularly, I will use <code>cron</code>
+      to call it every hour
+      <a href="#footer-1"><sup>1</sup></a>.
+    </p>
+    <p>
+      This should work on my laptop.
+      However, it will not transition nicely to mobile.
+      That is, I cannot run a <code>cron</code> job on my phone.
+      And finding the city and state will be more difficult without <code>curl</code>.
+    </p>
+    <p>
+      But I'll cross that bridge when I come to it.
+      Will I need to build a whole Android App, or does something already exist?
+      I can see just posting my IP address from mobile, and running a service
+      to transform that into city/state.
+      I can either use <code>cron</code> on a remote server or use
+      something like AWS Lambda.
+    </p>
+
+    <h5 class="blog-title left">Learning Objectives</h5>
+    <ul>
+      <li>become more familiar with Firebase</li>
+      <li>gain experience writing bash scripts</li>
+      <li>learn about development on mobile</li>
+      <li>
+        if appropriate, check out "serverless" (all the rage!)
+        and event-driven computing with
+        <a href="https://aws.amazon.com/lambda/">AWS Lambda</a>
+      </li>
+    </ul>
+
+    <h5 class="blog-title left">The Code: Laptop</h5>
+    <p>
+      The good news is that is works! <a href="../about.html">About</a>.
+    </p>
+    <p>
+      TODO: write up the story of creating the script.
+      <!-- <a href="#footer-2"><sup>2</sup></a> -->
+    </p>
+    <p>
+      The code for the
+      <a href="https://gist.github.com/common-nighthawk/dd1ead0ff48c70c0f5fc2d5cd190aa4c">shell script</a>
+      and the code for the
+      <a href="https://github.com/common-nighthawk/danielallendeutsch3.0/blob/master/assets/javascript/location.js">client-side fetch</a>
+      are available on Github.
+    </p>
+
+    <h5 class="blog-title left">The Code: Mobile</h5>
+    <p>
+      TODO: implementation and write-up. Figure out all the stuff.
+    </p>
+
+    <h5 class="blog-title left">Outstanding Questions</h5>
+    <ul>
+      <li>
+        is there a better way to get my location?
+        Specifically, I know that every move of my Android phone is tracked by Google.
+        Is there a convenient API to access the location data
+        so that I avoid the entire process of finding and posting myself?
+      </li>
+      <li>
+        is my approach right?
+        If there's a better way, I'd absolutely love to hear about it.
+      </li>
+    </ul>
+
+    <h5 class="blog-title left">Takeaways</h5>
+    <ul>
+      <li>
+        <span class="bold">JavaScript</span> &mdash;
+        I tricked myself into thinking I know JavaScript
+        because I can manipulate the DOM.
+        Trying to write simple code to handle data
+        gave me a lot of trouble.
+        And I'm not happy with the code:
+        <code>allDateTimes[Math.max(...Object.keys(allDateTimes))]</code>.
+        Also, I forgot that JS is not a high-level language.
+        It's often used in the same sentence as Ruby and Python,
+        but it does not have nearly as many convenience methods.
+      </li>
+      <li>
+        <span class="bold">Bash</span> &mdash;
+        I first tried to write the script using pure bash.
+        I found myself trying to do crazy manipulations with
+        <code>sed</code> and <code>awk</code>.
+        I'm not sure if the problem is that bash is the wrong tool
+        or that I don't know how to use it well enough.
+        I wanted to use bash because I thought that would translate
+        to mobile better, but that might not be true.
+      </li>
+      <li>
+        <span class="bold">Ruby</span> &mdash;
+        I went through many iterations of this code.
+        Because it started as bash, the first pass in Ruby
+        was without any classes. Straight calls top to bottom.
+        Then I got carried away, and made it very Object Oriented.
+        (I had two classes, and then broke it down even more into three.)
+        I'm happy with the code, but worried I'm forcing everything into
+        the paradigms I'm familiar with when there are better ways.
+      </li>
+    </ul>
+
+    <h5 class="blog-title left">Closing</h5>
+    <p>
+      I'm happy I got this working relatively quickly.
+      I think it's a neat update to the <a href="../about.html">About</a> page.
+    </p>
+    <p>
+      Getting this working on mobile will be more interesting.
+      I need to do some reading about Bash.
+      I will update this post as I continue working on this project.
+    </p>
+    <p>
+      I'm going to Michigan this weekend, so we'll see if it works!
+    </p>
+
+    <hr>
+    <a name="footer-1"><sup>1<sup></a>
+    a note about <code>cron</code>.
+    I heard the term used for over a year, and always thought
+    "I'm a web developer. That's a tool used by Systems people."
+    <code>cron</code> is now one of my favorite tools.
+    It comes in handy all of the time, and is simple to use.
+    If you're not familiar with it, definitely check it out.
+    It allows you to schedule recurring jobs.
+    <!-- <br> -->
+    <!-- <a name="footer-2"><sup>2<sup></a> -->
+    <!-- storing my time in UTC to avoid possible time-travel conflicts -->
+
+    <hr><p class="twitter">Have anything to say? Questions or feedback? Tweet at me <a href="https://twitter.com/cmmn_nighthawk">@cmmn_nighthawk</a>!</p>
+  </div>
+</body>
+</html>

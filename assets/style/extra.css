@@ -30,6 +30,10 @@ h5.blog-title {
   margin: 0 0 10px 0;
   padding: 0;
 }
+.tldr {
+  font-style: italic;
+  font-weight: bold;
+}
 
 .examples {
   margin: 0 15px 10px 15px;
@@ -66,4 +70,9 @@ h5.blog-title {
 .ssl-blog img {
   max-height: 40px;
   margin: 15px 0;
+}
+
+h6.blog-title.left {
+  font-size: 15px;
+  margin-bottom: 10px;
 }
