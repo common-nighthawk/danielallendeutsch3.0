@@ -58,7 +58,7 @@
     <p>3. Breaking Change: have the API return <span>just</span> first_name and last_name.</p>
 
     <h5 class="blog-title left">What Are the Implications?</h5>
-    <h6>Backward Compatible</h6>
+    <h6 class="blog-title left">Backward Compatible</h6>
     <p>
       There is nothing the speaks against delivering the new and the old at the same time.
       Because the names do not conflict, it is possible to serve everything.
@@ -97,7 +97,7 @@
       Also&mdash;you are carrying around legacy code.
     </p>
 
-    <h6>Versioning</h6>
+    <h6 class="blog-title left">Versioning</h6>
     <p>
       It is possible to create two versions of the API.
       <code>http://danielallendeutsch.com/api/v1/users/1.json</code> and
@@ -132,7 +132,7 @@
       Pros: it still works.  Cons: maintaining legacy code.
     </p>
 
-    <h6>Breaking Change</h6>
+    <h6 class="blog-title left">Breaking Change</h6>
     <p>
       What if <code>first_name</code> and <code>last_name</code> is just better than <code>name</code>?
       And what if no one depends on the API except for you.

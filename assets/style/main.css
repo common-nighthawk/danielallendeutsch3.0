@@ -18,8 +18,10 @@ h5 {
   margin-top: 20px;
   color: #314159;
 }
+h6 { margin-bottom: 10px !important; }
 p { margin: 0 0 14px; }
 
+span { font-style: italic; }
 .bold { font-weight: bold; }
 .no-underline { text-decoration: none !important; }
 
@@ -36,16 +38,11 @@ p { margin: 0 0 14px; }
   margin: 0 auto;
 }
 
-img { 
+img {
   max-width: 100%;
   border-radius: 5%;
 }
 
-span { font-style: italic; }
-span#city, span#state {
-  font-style: initial;
-  text-transform: capitalize;
-}
 .social-icon { width: 48%; }
 h5.social { visibility: hidden; }
 
