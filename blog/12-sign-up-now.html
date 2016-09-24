@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Daniel Allen Deutsch</title>
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootswatch/3.3.0/journal/bootstrap.min.css">
+  <link rel="stylesheet" href="../assets/style/main.css">
+  <link rel="stylesheet" href="../assets/style/extra.css">
+  <link rel="icon" type="image/jpg" href="../assets/images/ddd-about.jpg">
+  <script src="../assets/javascript/ga.js"></script>
+</head>
+<body class="container-fluid">
+  <div class="row header">
+    <a class="no-underline" href="../index.html">
+      <h1>Daniel Allen Deutsch</h1>
+      <h4 class="title">Web Developer</h4>
+    </a>
+    <h3 class="slogan"><a class="no-underline" href="../blog.html">Blog</a></h3>
+  </div>
+  <div class="row main">
+    <h3 class="blog-title center">Project #4: Sign Up Now</h3>
+    <h6 class="blog-title center">September XX, 2016</h6>
+
+    <h5 class="blog-title left">Introduction</h5>
+    <p>
+      Passwords are the worst.
+      I believe there is universal hatred for the phrase:
+      "password must contain a special character".
+    </p>
+    <p>
+      There is one service I use that requires passwords to be updated each month.
+      My password started out as "MyPassword" (not really).
+      And now it is "MyPassword!!!!!!" (really ending in 6 !'s).
+    </p>
+    <p>
+      I had the idea to make a website to parody the process
+      of signing up for a new service.
+      It took more time than I expected,
+      but I also learned more than I would have guesses.
+      For that reason, I'll write about the process here.
+    </p>
+    <p>
+      The website is available here:
+      <a href="http://sign-up-now.s3-website-us-east-1.amazonaws.com/">sign-up-now.s3-website-us-east-1.amazonaws.com</a>.
+    </p>
+
+    <h5 class="blog-title left">The Specs</h5>
+    <ul>
+      <li>provide increasingly frustrating error messages</li>
+      <ul>
+        <li>
+          I thought it would be funny for the messages
+          to start out realistic ('password must be longer than 6 characters'),
+          and get more and more absurd ('password must contain name of the capital and largest city of Qatar')
+        </li>
+      </ul>
+      <li>have no backend (HTML, CSS, JS only)</li>
+      <ul>
+        <li>this is a lightweight project</li>
+        <li>
+          there is no incredibly simple and cheap hosting solution for web apps,
+          at least as compared to using
+          <a href="http://docs.aws.amazon.com/gettingstarted/latest/swh/website-hosting-intro.html">AWS S3 for static sites</a>
+        </li>
+      </ul>
+      <li>not look terrible</li>
+      <ul>
+        <li>no one will take a page seriously if it looks like trash</li>
+        <li>
+          I wanted to try and build a page without
+          any frontend framework (i.e. Bootstrap)
+        </li>
+      </ul>
+    </ul>
+
+    <h5 class="blog-title left">The Code</h5>
+    <p>
+      The code for this project is incredibly simple.
+      <a href="https://github.com/common-nighthawk/sign-up-now">All of the files are publicly available</a>.
+    </p>
+
+    <h5 class="blog-title left">What Did I Learn (Technical)</h5>
+    <ul>
+      <li>
+        <span class="bold">JavaScript</span> &mdash;
+        this was my first time using Regular Expressions in JS.
+        I didn't come across anything unexpected,
+        but there are nuances to the different methods
+        and building the RegEx
+      </li>
+      <li>
+        <span class="bold">Design</span> &mdash;
+        I have a bad habit of slapping bootstrap on everything.
+        I recently came across a great
+        <a href="http://jgthms.com/web-design-in-4-minutes/">blog post</a>
+        that convinced me decent design isn't too difficult.
+        I stole all the code from that article, and
+        I think the site looks pretty good for 66 lines of CSS.
+      </li>
+      <li>
+        <span class="bold">Web Accessibility</span> &mdash;
+        I posted what I built a few places, and a friend wrote to tell me
+        she thought it was neat but that my tiny page failed certain basic
+        web accessibility standards. This ended up being a fun rabbit-hole
+        to chase down, so deserves it's own section.
+      </li>
+    </ul>
+
+    <h5 class="blog-title left">Web Accessibility</h5>
+    <p>
+      The web, on a fundamental level, should be accessible to everyone.
+      This includes, as an example, people that are blind and color blind.
+      If web pages are built properly, there are tools that allow all users
+      to use your website. A common and important tool is a screen-reader.
+    </p>
+    <p>
+      Largely, if you use proper semantic HTML everything will take care of itself.
+      But what if, for example, you put an &lt;h1&gt; on the page
+      without any content? This is a common thing to do, if you plan to fill
+      the h1 with dynamic content using JavaScript basic on some user-interaction.
+    </p>
+    <p>
+      To a sighted-up, this is no problem. But this messes up a screen-reader.
+      It is assumed that an h1 contains the most important text on the page,
+      and if it's empty things get confused.
+    </p>
+    <p>
+      Now that you know that's a shitty thing to do,
+      I hope you'll be more conscious of it
+      <a href="#footer-1"><sup>1</sup></a>.
+    </p>
+    <p>
+      These are things I did wrong&mdash;
+      <ul>
+        <li>
+          all form fields should have a label associate with it.
+          If not, a screen-reader cannot associate text with fields.
+          <a href="https://github.com/common-nighthawk/sign-up-now/commit/b582c8ba2951a0ed8fbc7ae788cbb8e28e834790">
+            Check out the commit
+          </a>.
+          The label has a <code>for</code> tag that links to the <code>id</code> of the form field.
+        </li>
+        <li>
+          text should have at least a 4.5:1 color contrast with its background.
+          Who knew? I found
+          <a href="http://webaim.org/resources/contrastchecker/">an awesome website to help find alternate colors</a>.
+        </li>
+        <li>
+          if you add something important to a page (like an error message)
+          without a new page load, that message needs to be announced
+          by a screen-reader. HTML accepts
+          <a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA">
+            ARIA attributes (Accessible Rich Internet Applications)
+          </a>
+          specifically so the web works better for people with disabilities.
+          I won't go into details, but
+          <a href="https://github.com/common-nighthawk/sign-up-now/commit/e7ff5b104bebc04311e8ef1519ce8272e6d763dc">I added</a>
+          an <code>aria-describedby</code>
+          to link the error message to the password field. As a result,
+          it is announced by the screen-reader.
+        </li>
+      </ul>
+    </p>
+
+    <h5 class="blog-title left">What Did I Learn (Non-Technical)</h5>
+    <p>
+      I often take on big projects (Project #3: Gain Fluency in Go)
+      that have no obvious end. It was nice and fun
+      building something with such a small scope.
+    </p>
+    <p>
+      Additionally, it's sometimes the quick features and projects
+      that bring people the most joy.
+      I spent a long time building a
+      <a href="http://www.picturebookmylife.com/">big thing</a>
+      I couldn't convince anyone to use.
+      This took a few hours, and ~300 people played with it
+      (small numbers for BuzzFeed, big numbers for me).
+      Some people even reached out to say they got a big kick out of it.
+    </p>
+    <p>
+      Lastly, wins beget wins. I didn't expect to learn about accessibility
+      with this project. But if you build something and show it to people,
+      it can led to unexpected places. Last week I knew nothing about
+      web accessibility; now I know slightly more than that 😀.
+    </p>
+
+
+    <br>
+
+    <hr>
+    <a name="footer-1"><sup>1<sup></a>
+    TODO: write about being a good citizen
+    low code, high upside
+    a note about <code>cron</code>.
+    I heard the term used for over a year, and always thought
+    "I'm a web developer. That's a tool used by Systems people."
+    <code>cron</code> is now one of my favorite tools.
+    It comes in handy all of the time, and is simple to use.
+    If you're not familiar with it, definitely check it out.
+    It allows you to schedule recurring jobs.
+
+
+    <hr><p class="twitter">Have anything to say? Questions or feedback? Tweet at me <a href="https://twitter.com/cmmn_nighthawk">@cmmn_nighthawk</a>!</p>
+  </div>
+</body>
+</html>
