@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Daniel Allen Deutsch</title>
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootswatch/3.3.0/journal/bootstrap.min.css">
+  <link rel="stylesheet" href="../assets/style/main.css">
+  <link rel="stylesheet" href="../assets/style/extra.css">
+  <link rel="icon" type="image/jpg" href="../assets/images/ddd-about.jpg">
+  <script src="../assets/javascript/ga.js"></script>
+</head>
+<body class="container-fluid">
+  <div class="row header">
+    <a class="no-underline" href="../index.html">
+      <h1>Daniel Allen Deutsch</h1>
+      <h4 class="title">Web Developer</h4>
+    </a>
+    <h3 class="slogan"><a class="no-underline" href="../blog.html">Blog</a></h3>
+  </div>
+  <div class="row main">
+    <h3 class="blog-title center">Project #2: My Location</h3>
+    <h4 class="blog-title center">Pushing from Mobile</h4>
+    <h6 class="blog-title center">November 7, 2016</h6>
+
+    <h5 class="blog-title left">Introduction</h5>
+    <p>
+      This post continues a
+      <a href="11-project-2-location.html">previous entry</a>.
+      But bringing everyone up to speed&mdash;
+    </p>
+    <p>
+      I am traveling, and want the
+      <a href="../about.html">About</a>
+      page of this website to programatically say where I'm living.
+      The plan is to post my location every hour
+      to a remote database.
+      When someone visits the page,
+      a client-side GET request is made to the database and
+      JS will fill in the City and State on the page.
+    </p>
+    <p>
+      The challenging part is posting my location.
+      I couldn't easily figure out how to do this from my phone,
+      so I set it up to run from my laptop
+      (using a Ruby script called with <code>cron</code>).
+    </p>
+    <p>
+      It worked, but there were two major drawbacks.
+      1. My computer is not always on.
+      2. My computer is not always with me.
+      Therefore, my location wasn't very accurate.
+    </p>
+    <p>
+      I put this project on hold for a few months.
+      But I recently revisited it and now having it working
+      using my phone's location!
+    </p>
+
+    <h5 class="blog-title left">Mobile to Database (Direct): Failed Attempt</h5>
+    <p>
+      A friend<a href="#footer-1"><sup>1</sup></a>
+      told me that IFTTT (mobile app)
+      can run web requests on timed intervals.
+      When I heard this, I thought I'd have my location
+      posting from my phone within an hour.
+    </p>
+    <p>
+      Unfortunately, IFTTT is not very robust<a href="#footer-2"><sup>2</sup></a>.
+      It doesn't allow the chaining of "recipes"
+      and I couldn't figure out a way to calculate a parameter
+      <span>and</span> pass it with a request.
+    </p>
+    <p>
+      I wanted to directly make a POST request to the database (Firebase).
+      But there was no way to determine the city and state or
+      longitude and latitude and include that
+      with the request<a href="#footer-3"><sup>3</sup></a>.
+    </p>
+
+    <h5 class="blog-title left">Serverless: Failed Attempt</h5>
+    <p>
+      As a result, I thought I could keep the IFTTT request
+      and get the mobile location from the IP address of the request.
+    </p>
+    <p>
+      As a way to think about it, I'd make a simple request
+      to a remote endpoint every hour.
+      The application behind the endpoint would run some logic
+      to determine the physical address from the IP.
+      Then it would post that information to the database.
+    </p>
+    <p>
+      But instead of an application, I'd use Serverless Architecture!
+    </p>
+    <p>
+      Serverless is all the rage these days, and I'd been looking
+      for an excuse to play with it.
+      Serverless is also known as
+      'Backend as a Service' and
+      'Function as a Service' and
+      'NoOps'<a href="#footer-4"><sup>4</sup></a>.
+      The best explanation I've read is available on
+      <a href="http://martinfowler.com/articles/serverless.html">Martin Fowler's website</a>.
+    </p>
+    <p>
+      This seemed like the perfect use-case for Serverless.
+      The idea is&mdash;it's wasteful to run an entire application to do one thing.
+      AWS offers a service Lambda.
+    </p>
+    <p>
+      The way Lambda works is that whenever it is "triggered"
+      it executes a function.
+      The advantages are&mdash;
+      <ul>
+        <li>you don't need to run a server</li>
+        <li>because there is no server, you don't need to worry about operations or infrastructure</li>
+        <li>it's much cheaper. instead of paying for an instance 24/7, you only pay when functions are run</li>
+      </ul>
+    </p>
+    <p>
+      I won't go deep into the details, but I set up an API Gateway
+      for the trigger event.
+      Whenever the endpoint is hit, it runs the function on Lambda.
+      The code for the function is available
+      <a href="https://gist.github.com/common-nighthawk/7ae1c143096e01b4d0fe036d9087b5d8">in a Gist</a>
+      <a href="#footer-5"><sup>5</sup></a>.
+    </p>
+    <p>
+      This function does three things.
+      It gathers the important information: datetime and IP address.
+      It transforms the IP address into a city and state.
+      It posts that information to the remote database.
+    </p>
+    <p>
+      Believe it or not, this all worked.
+      I was feeling so pleased with myself, I created a diagram.
+    </p>
+    <img id="serverless" src="../assets/images/serverless.png">
+    <p>
+      Unfortunately, there is one major problem.
+      It is not possible to determine a physical location
+      from an IP address when connected to the
+      wireless mobile internet.
+    </p>
+    <p>
+      This works end-to-end with the phone connected to WiFi.
+      But when I was connected to the mobile web,
+      my IP address always had me in Virginia &#128515;
+      <a href="#footer-6"><sup>6</sup></a>.
+    </p>
+
+    <h5 class="blog-title left">Web Scraping: Success</h5>
+    <p>
+      I decided, fundamentally, that trying to transform an IP
+      into a location was a mistake.
+      I needed to get the physical location from the phone itself.
+    </p>
+    <p>
+      I did some google research for
+      "How to share my location with an Android phone".
+      Sure enough, you can just change certain privacy settings
+      and share your exact location with the world on Google+.
+    </p>
+    <p>
+      Once I was sharing my location on Google+,
+      I just needed to: scrape the page every hour,
+      grab the location, and post it to the remote DB.
+    </p>
+    <p>
+      For visiting the page, I used
+      <a href="https://github.com/watir/watir">Watir</a>
+      because it looked popular and let me write Ruby.
+      The code is
+      <a href="https://gist.github.com/common-nighthawk/05c5818d931204589fb688fc60288785">available in a Gist</a>.
+    </p>
+    <p>
+      Watir runs a real web browser, so it's easy to
+      click and type and sleep as necessay
+      <a href="#footer-7"><sup>7</sup></a>.
+    </p>
+    <p>
+      I got this working quickly on my local computer,
+      but there were a few gotchas when
+      moving the script to a server.
+      1. Watir seeds to run headless, because a server
+      cannot open GUI Chrome.
+      2. You can use any web browser, but you need to install
+      it and the driver
+      <a href="#footer-8"><sup>8</sup></a>.
+    </p>
+
+    <h5 class="blog-title left">What Did We Learn?</h5>
+    <ul>
+      <li>Test Assumptions Early</li>
+      <ul>
+        <li>
+          It would have only taken a minute to walk outside,
+          get my IP address on mobile wifi,
+          and seen if that translated to a correct physical location.
+        </li>
+        <li>
+          This would have saved me <span>hours</span>
+          working through the entire first approaches.
+        </li>
+        <li>
+          But learning about Lambda was the most fun part of this project,
+          so I don't feel too bad.
+        </li>
+      </ul>
+      <li>Your Users Don't Care About Your Tech Stack</li>
+      <ul>
+        <li>
+          I'm sad the Serverless approach didn't work.
+          Because, let's face it, that approach is cool
+          and web scraping is boring.
+        </li>
+        <li>
+          That is, after all this&mdash;it's disappointing
+          that my solution is just using Google+
+          and grabbing the info from there every hour.
+        </li>
+        <li>
+          But it's a good reminder that your users don't care.
+          My mom can visit the page and see where I am,
+          and how that happens truly doesn't matter to her.
+        </li>
+      </ul>
+      <li>Build Robust Software</li>
+      <ul>
+        <li>
+          On the flip side of that,
+          it <span>is</span> important to build robust software.
+        </li>
+        <li>
+          If Google+ renames the link
+          from 'About' to 'Details' my script will break.
+          (I hard-coded "click the link About".)
+        </li>
+        <li>
+          Even through your code doesn't matter to
+          end-uses, it still needs to hold up.
+        </li>
+      </ul>
+      <li>It's Okay To Put Things On The Shelf</li>
+      <ul>
+        <li>
+          I spend a lot of time feeling bad
+          about all the things I'm not getting done.
+        </li>
+        <li>
+          It's okay to pause on a project.
+          Sometimes distance brings clarity, insight,
+          perspective, and/or motivation.
+        </li>
+      </ul>
+      <li>Thought of Serverless/Lambda</li>
+      <ul>
+        <li>
+          I was really impressed using Lambda.
+          I now understand all the hype.
+          I'm confident I'll be using it again soon
+          on one project or another project.
+        </li>
+        <li>
+          The tools are more underdeveloped than I expected.
+          For example, the only supported languages are:
+          Node, Python, and Java.
+        </li>
+        <li>
+          When it's more mature in a few years,
+          it will be all-around boss.
+        </li>
+      </ul>
+    </ul>
+
+    <h5 class="blog-title left">Conclusion</h5>
+    <p>
+      I'm happy to have this working.  My location really does
+      make it from my phone to my <a href="../about.html.">About</a> page.
+      When I drove from Memphis to Austin,
+      I kept checking and it was fun to see that I lived in
+      "Marion, Arkansas", "Gurdon, Arkansas", "Texarkana, Arkansas",
+      "Lancaster, Texas", throughout the day.
+    </p>
+    <p>
+      There is one last thing I don't want to gloss over: privacy.
+      My solution only works because I am publicly sharing my exact location.
+      This doesn't bother me; in fact, I like it<a href="#footer-9"><sup>9</sup></a>.
+      But I highlight it to say that this definitely doesn't work
+      for everyone and there is a sacrifice/cost to the approach I used.
+    </p>
+    <br>
+    <p>
+      If I were to do it again,
+      I think building a native mobile-app is the right approach.
+      There's no way getting the location of the phone should be so difficult.
+      Even though I know nothing about mobile-dev,
+      getting the location and making a POST location sound pretty simple.
+      I'm confident I could struggle through it with
+      some copy-pasta of tutorial code.
+    </p>
+    <p>
+      Perhaps I'll give it a stab in a few months.
+    </p>
+
+
+    <hr>
+    <a name="footer-1"><sup>1<sup></a>
+    shoutout to <a href="https://github.com/erikolsen">Erik Olsen</a>.
+
+    <br>
+    <a name="footer-2"><sup>2<sup></a>
+    IFTTT, which stands for "if this, then that" is incredibly cool.
+    However, it is made more for general users rather than
+    developer or power users.
+
+    <br>
+    <a name="footer-3"><sup>3<sup></a>
+    I had the idea to create a recipe to write
+    the City and State to an Evernote list at, say 10 minutes after the hour.
+    And then grab the details from Evernote to pass to the webrequest at,
+    say 15 minutes after the hour.
+    But 1. I didn't think I could get it to work and
+    2. that feels incredibly hacky.
+    I mention it only to give an idea of what IFTTT makes possible.
+
+    <br>
+    <a name="footer-4"><sup>4<sup></a>
+    In my honest option, Serverless is a terrible name.
+    For what I'm doing, 'Function as a Service' seems the most accurate.
+    But, damn, it's fun saying Serverless.
+
+    <br>
+    <a name="footer-5"><sup>5<sup></a>
+    This code is not good. If you are laughing at my date parsing, laugh away.
+    Because this approach didn't pan out, I never refactored.
+    And I'm terrible at writing JavaScript.
+    But I wanted to provide an idea of what a function actually looks like.
+
+    <br>
+    <a name="footer-6"><sup>6<sup></a>
+    Intuitively, this makes sense.
+    I should have thought about both scenarios earlier.
+    I started reading about mobile IP addresses,
+    but didn't really have the patience
+    to learn exactly what's going on.
+
+    <br>
+    <a name="footer-7"><sup>7<sup></a>
+    It seems ideal for setting up your daily entry
+    for to the Hamilton lottery, for example.
+
+    <br>
+    <a name="footer-8"><sup>8<sup></a>
+    Instructions to install server-chrome
+    <a href="http://askubuntu.com/questions/510056/how-to-install-google-chrome">available here</a>.
+    Chrome driver
+    <a href="http://chromedriver.storage.googleapis.com/index.html?path=2.24/">available here</a>.
+    You'll need to <code>wget</code> and <code>chmod +x</code>.
+
+    <br>
+    <a name="footer-9"><sup>9<sup></a>
+    I believe strongly in transparency, and keep toying with the idea
+    of doing something crazy like making my emails open.
+
+    <!-- could not get cron to work. so using screen + infinite loop and sleep -->
+    <!-- talk about building ruby from scratch -->
+    <!-- and needing xvfb -->
+
+    <hr><p class="twitter">Have anything to say? Questions or feedback? Tweet at me <a href="https://twitter.com/cmmn_nighthawk">@cmmn_nighthawk</a>!</p>
+  </div>
+</body>
+</html>

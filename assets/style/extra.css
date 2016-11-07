@@ -5,6 +5,7 @@
 
 body { color: #2f2f2f; }
 
+img { border-radius: 0; }
 ul { padding-left: 15px; }
 li { padding-bottom: 5px; }
 td {
@@ -80,4 +81,8 @@ p.twitter { font-style: italic; }
 .ssl-blog img {
   max-height: 40px;
   margin: 15px 0;
+}
+
+img#serverless {
+  margin: 0 5% 20px 5%;
 }
