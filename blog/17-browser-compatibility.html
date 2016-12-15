@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Daniel Allen Deutsch</title>
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootswatch/3.3.0/journal/bootstrap.min.css">
+  <link rel="stylesheet" href="../assets/style/main.css">
+  <link rel="stylesheet" href="../assets/style/extra.css">
+  <link rel="icon" type="image/jpg" href="../assets/images/ddd-about.jpg">
+  <script src="../assets/javascript/ga.js"></script>
+</head>
+<body class="container-fluid">
+  <div class="row header">
+    <a class="no-underline" href="../index.html">
+      <h1>Daniel Allen Deutsch</h1>
+      <h4 class="title">Web Developer</h4>
+    </a>
+    <h3 class="slogan"><a class="no-underline" href="../blog.html">Blog</a></h3>
+  </div>
+  <div class="row main">
+    <h3 class="blog-title center">Browser Compatibility Is No Joke</h3>
+    <h6 class="blog-title center">MONTH YY, 201X</h6>
+
+    <p>
+      There is nothing I like working on less
+      than fixing browser compatibility issues. (1)
+    </p>
+    <p>
+      It would often go like this:
+      I'd get to work and all would be well in the world.
+      Then we'd get a bug report like,
+      'the progress upload bar doesn't work
+      in certain versions of Internet Explorer'.
+      Then all would not be well in the world.
+    </p>
+    <p>
+      There are a few reasons these are so un-fun.
+      These problems were difficult to debug,
+      solutions were a pain to test across browsers,
+      fixes would inelegant if-elsif-elsif-elsif hacks,
+      and it didn't feel like productive work.
+    </p>
+    <p>
+      So, well, I'd whine.
+      "Do we really have to support IE8?" I'd say.
+    </p>
+    <p>
+      My boss should have told me not to complain so much.
+      But because he was kind, he'd open up some metrics
+      and we'd look at them together.
+    </p>
+    <p>
+      We'd like at the percentage of users on different platforms,
+      both globally and using our application.
+      Sure enough, the number of people affected by the bug
+      I didn't want to fix was not even close to negligible.
+    </p>
+    <p>
+      So I'd fix it.
+      But I'd sigh, and think bad things about Enterprise Software.
+    </p>
+
+    <p>
+      Fast forward.
+      I've been building more hobby projects recently.
+      One of the nicest things is that I get to choose what I support.
+    </p>
+    <p>
+      IE8? No way. I'm building things for myself and my friends.
+      If there are a few edge cases that aren't well handled,
+      1. the world won't end
+      2. the people I know use modern web browsers.
+    </p>
+    <p>
+      I thought that was a safe assumption.
+      <span>Nope.<span>
+    </p>
+    <p>
+      I'm building a
+      <a href="">small web application</a>
+      written in Go.
+      It's more complex than a 'Hello World' website,
+      but it's fairly simple.
+    </p>
+    <p>
+      I built it to the point where it worked.
+      It wasn't styled and was missing obvious features,
+      but the core functionality was complete.
+      So I sent it to 3 people. (2)
+    </p>
+    <p>
+      It worked for one person and did not work for the other two.
+      Additionally&mdash;it didn't work
+      for those two people in different ways.
+    </p>
+    <p>
+      This is a bummer.
+      We'll dive into what happened on a technical level in a minutes.
+      But here is what I learned:
+    </p>
+    <p>
+      Browser compatibility problems are no joke.
+      They exist as soon a web application is one hair more complex
+      than trivial.
+      They cannot be dismissed as enterprise problems.
+      And rather than treating them as rare edge cases,
+      they need to be thought of as first-class problems.
+    </p>
+    <p>
+      One the one hand, this is disheartening.
+      There is no such thing as a
+      'quick project that will work 95% of the time'.
+      One the other hand, this is the state of the web.
+      So I'm changing my attitude:
+      better to account for the differences and
+      build things properly than any alternative.
+    </p>
+
+    <h5 class="blog-title left">Technical Learning</h5>
+
+    <ul><li>Browsers Handle SSL Differently</li></ul>
+    <p>
+      This first one is actually kind-of my fault.
+      But it still surprised me.
+      I assumed that SSL/HTTPS is such a standardized
+      and regulated thing that it would be consistent across platform.
+    </p>
+    <p>
+      (I want to lie and say them I implemented HTTP so early
+      in a hobby project because I always follow best security practices.
+      In truth, I am depending on a JavaScript function that won't run
+      from an insecure origin.)
+    </p>
+    <p>
+      I installed a certificate from Let's Encrypt (3),
+      and plugged the location of the cert and key
+      into the proper Go function.
+      HTTPS worked perfectly everywhere, <span>except</span>
+      it didn't work at all on Android Chrome. (4)
+    </p>
+    <p>
+      It turn out I was using the 'key' and not the 'full-key'.
+      The full key provides details about the intermediate certificates.
+      I wrote up the details (with links to even more details)
+      on the <a href="https://github.com/common-nighthawk/hello-its-me/issues/25">Github issue</a>.
+    </p>
+    <p>
+      This makes sense (or enough sense, without knowing much about SSL).
+      But the difference surprised me.
+    </p>
+
+    <ul><li>HTML Audio Support Is Varied</li></ul>
+    <p>
+      It's all in
+      <a href="http://www.w3schools.com/html/html5_audio.asp">this chart</a>.
+      All browsers support MP3,
+      most browsers support Wav,
+      fewer browser support Ogg.
+    </p>
+    <p>
+      I am using a JS function to record an audio file
+      from the user's microphone.
+      This does not return an MP3 format.
+    </p>
+    <p>
+      To get this working everyone, I convert all files on the server
+      to MP3 using
+      <a href="https://en.wikipedia.org/wiki/FFmpeg">FFmeg</a>(4).
+    </p>
+    <ul><li>Accessing The User's Microphone Is Not Supported Everywhere</li></ul>
+    <p>
+      This is nothing new, but different browsers
+      support different JavaScript functions.
+      My application is dependant on <code>MediaDevices.getUserMedia()</code>.
+      (I want to access the mic without a third-party library.)
+      Unfortonetely, there is
+      no support
+      https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia#Browser_compatibility
+      for Internet Explorer and Safari.
+    </p>
+    <p>
+      If you use an unsupported browser, my web application displays a
+      "Sorry, you are out of luck" message.
+      Better than buttons not working, but still sad.
+    </p>
+    <p>
+      I don't know if certain browsers don't support this feature
+      because they consider it a security risk
+      or if it is coming in future versions.
+    </p>
+
+    <ul><li>The Function To Access The Mic Is Implemented Differently</li></ul>
+    <p>
+      Chrome and Firefox, for example, both support
+      <code>MediaDevices.getUserMedia()</code>.
+      However, capturing the audio was working on Chrome 
+      and not working on Firefox.
+    </p>
+    <p>
+      Digging into it, Chrome captures the audio and breaks it into chunks
+      a few times a second&mdash;constantly breaking the recording
+      down into small pieces.
+      Firefox just delivers one big chunk.
+    </p>
+    <p>
+      As a result, Firefox needs a second (more accurately, about 3 milliseconds)
+      to get the file ready after the recording is stopped.
+      I was trying to send it immedietely, so I introducted
+      retries until the chunk list is ready.(5)
+    </p>
+    <p>
+      Again--I had no expectations about the implementation details.
+      But I did not except them to be different.
+    </p>
+
+    (1) Actually, that isn't true. Because timezones.
+    (2) Moms (tm) the ultimate beta testers.
+    (3) Let's Encrypt is awsome
+    (3) Isn't it crazy it works on Desktop Chrome but not Mobile Chrome?
+    (4) I was not familar with FFmpeg, so this was a bunch to figure out. 
+        But it was easy to install and works great.
+    (4) I should probably use a promise, but instead I just retry 
+        every 50 ms.
+
+
+
+
+
+
+
+
+
+
+
+    <p>
+      At work, there is really only one thing I don't like writing code for.
+      That is tickets related to browser compatibility.
+    </p>
+    <p>
+      It usually goes like this:
+      I am happy and all is well in the world.
+      We receive a bug report that video doesn't work properly on IE8.
+      Then all is not well in the world.
+    </p>
+    <p>
+      These problems are a pain to fix,
+      and the soltion is almost always an ugly workaround.
+      So I whine, a bit.
+      "If you're using IE8", I say, "you kind of deserve the non-working video."
+      My boss should tell me to shut up,
+      but he takes a different approach because he's kind.
+    </p>
+    <p>
+      First we look up the breakdown of browsers globally.
+      Then we look at the breakdown of our app's users.
+      And, sure enough, the numbers are not even close to trivial.
+      We need to support feature X on browser Y.
+    </p>
+    <p>
+      But I had a solution! Hobby project!
+      When I build side-projects, I really only care
+      that it works for me and my friends.
+      Certainly everyone I know uses modern web browsers,
+      so I could code productively
+      without having to worry about these edge cases.
+    </p>
+    <p>
+      I build a thing recently, shipped it, and asked 3 people to check it out.
+      It worked for one person and was broken on the other two.
+      WTF?
+    </p>
+    <p>
+      Browser compatibility is no joke.
+      It's easy to bash on old browsers for their lack of support
+      on some now-important features.
+      But building a small web app, I'm amazed at some of the things I learned:
+      browsers build about everying completely differenly.
+    </p>
+    <p>
+      What makes it such a bummer is that what I built is tiny in scope.
+      It's more than 'hello world', but it doesn't do much.
+      You can create an audio file, and share it.
+      That's it.
+    </p>
+    <p>
+      We'll dig into the technical components of what I learned.
+      But there are two things I learned:
+    </p>
+    <ol>
+      <li>
+        browser compatibility problems are a huge mess.
+        if you want to build a small thing that is only supported
+        on one operating system for two browsers&mdash;you will hit
+        compatibility issues.
+      </li>
+      <li>
+        because of this, they need to be taken seriously.
+        instead of growning, I am going to try and build with
+        compatibility at top-of-mind.
+        these problems are first-class citizens.
+      </li>
+    </ol>
+    <p>
+      I hope the problems detailed below convince you.
+      They finally concinved me.
+    </p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    http://www.w3schools.com/html/html5_audio.asp
+
+
+    <hr><p class="twitter">Have anything to say? Questions or feedback? Tweet at me <a href="https://twitter.com/cmmn_nighthawk">@cmmn_nighthawk</a>!</p>
+  </div>
+</body>
+</html>
