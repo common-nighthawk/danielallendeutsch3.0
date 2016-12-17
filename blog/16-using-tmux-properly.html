@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Daniel Allen Deutsch</title>
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootswatch/3.3.0/journal/bootstrap.min.css">
+  <link rel="stylesheet" href="../assets/style/main.css">
+  <link rel="stylesheet" href="../assets/style/extra.css">
+  <link rel="icon" type="image/jpg" href="../assets/images/ddd-about.jpg">
+  <script src="../assets/javascript/ga.js"></script>
+</head>
+<body class="container-fluid">
+  <div class="row header">
+    <a class="no-underline" href="../index.html">
+      <h1>Daniel Allen Deutsch</h1>
+      <h4 class="title">Web Developer</h4>
+    </a>
+    <h3 class="slogan"><a class="no-underline" href="../blog.html">Blog</a></h3>
+  </div>
+  <div class="row main">
+    <h3 class="blog-title center">Project #5: Using tmux Properly</h3>
+    <h6 class="blog-title center">January YY, 2017</h6>
+
+    <h5 class="blog-title left">Background</h5>
+    <p>
+      I've been using terminal multiplexers for a few years, but never properly.
+    </p>
+    <p>
+      In the beginning, it was just me and the (plain) terminal.
+      Then I started using Byobu, because it was company-standard at my first job.
+      Later I installed tmux on my personal computer because it seemed more popular.
+      And every time I work on a remote server, I use Screen.
+      Lions and tigers and bears, oh my!
+    </p>
+    <p>
+      This begs a few of questions.  We'll go through them in the next section.
+    </p>
+    <p>
+      As a quick aside before we dive in&mdash;'terminal multiplexer'
+      is an intimidating term.
+      But none of the concepts are complex.
+      Terminal means console and multipexing is just running numerous processes
+      at the same time in one place.
+    </p>
+
+    <h5 class="blog-title left">Introduction</h5>
+    <p>
+      <span class="bold">What is a terminal multiplexer?</span>
+      A terminal multiplexer is a souped-up terminal.
+      If you used a plain terminal for a few years and then someone said:
+      "What features do you think we should add?",
+      you'd end up with a multiplexer.
+    </p>
+    <p>
+      <span class="bold">Why do people use multiplexers?</span>
+      There are three major features.
+      <ul>
+        <li>
+          visual control:
+          split your screen into different sections,
+          run terminals off-screen that you can easily switch to,
+          etc.
+        </li>
+        <li>
+          shared sessions:
+          me and you can edit the same file on the same machine at the same time,
+          me using my computer and you using your computer
+        </li>
+        <li>
+          persistence:
+          leave everything running exactly as it is,
+          without needing to keep the application physically open,
+          so you can come back to it later
+        </li>
+      </ul>
+      We'll dig into these tangentially in more detail later.
+      But these are big features&mdash;so if only one is valuable to you,
+      it would be worth learning how to use a multiplexer.
+    </p>
+    <p>
+      <span class="bold">How do the different multiplexers fit together?</span>
+      Screen was first. It's been around a long time (initial release 1987),
+      and comes installed on all *nix operating systems.
+      tmux was next (2007). It's similar to Screen, but has some additional
+      features and is easier to configure.
+      Then came Byobu (2009). Bybobu is actually just a wrapper,
+      and it can wrap either Screen or tmux.
+      Similarly, it has some additional features
+      <a href="#footer-1"><sup>1</sup></a>.
+    </p>
+    <p>
+      <span class="bold">What Should I Use?</span>
+      There is no right answer. But I'll tell you what I do.
+      I use tmux on my development machine and Screen on production servers.
+      Byobu adds an additional layer of abstraction without any killer features.
+      Screen has the lightest footprint, so is good on servers.
+      tmux has enough useful features, and I spend a lot of time in the terminal,
+      that make it worth it.
+    </p>
+
+    <h5 class="blog-title left">Learning tmux</h5>
+    <p>
+      For years, I was running tmux but never using more then a handful of commands.
+      I'd google all the time, and constantly end up at the same
+      <a href="https://gist.github.com/henrik/1967800">cheatsheet</a>.
+    </p>
+    <p>
+      I put off learning how to use tmux because I was lazy.
+      And, well, I got around good enough with the 5 commands I knew.
+      Basically, I just didn't want to learn another 'thing'.
+    </p>
+    <p>
+      However, over the last few weeks I read a book:
+      <a href="https://pragprog.com/book/bhtmux/tmux">tmux: Productive Mouse-Free Development</a>.
+      I learned a lot!
+    </p>
+    <p>
+      My biggest takeaway is that tmux is much smaller in scope than I expected.
+      I don't know why, but I expected it to be like learning Vim or Git
+      (steep learning curve, complex, etc).
+    </p>
+    <p>
+      This was a great time-to-knowledge investment.
+      I feel foolish for not having done it sooner&mdash;after just a few hours
+      I'm an order of magnitude more comfortable with tmux.
+    </p>
+    <p>
+      I recommend that you read the book; it's short.
+      You can get away with reading just the first 4 chapters,
+      so it's only ~50 pages.
+    </p>
+
+    <h5 class="blog-title left">What I Learned</h5>
+    <p><span class="bold">Create Reasonable Settings</span></p>
+    <p>
+      There are certain settings that you need to be productive with tmux.
+      That is, it's just not great with the out-of-the box defaults.
+    </p>
+    <p>
+      On the one hand, I like that tmux is not strongly opinionated.
+      On the other hand, you should probably just set these up.
+    </p>
+    <p>
+      The configuration file lives at <code>~/.tmux.conf</code>.
+      These are a few must-haves&mdash;
+    </p>
+    <pre>bind j select-pane -D
+bind k select-pane -U
+bind h select-pane -L
+bind l select-pane -R
+
+bind | split-window -h
+bind - split-window -v
+
+bind -r J resize-pane -D 5
+bind -r K resize-pane -U 5
+bind -r H resize-pane -L 5
+bind -r L resize-pane -R 5
+
+set -g pane-border-fg white
+set -g pane-active-border-fg cyan
+set -g pane-active-border-bg cyan</pre>
+
+    <p>
+      I used <code>PREFIX o</code> exclusively to move between panes.
+      So if I had 4 panes open, I'd sometimes hit that sequence 3 times
+      to get where I wanted. That was no good at all.
+    </p>
+    <p>
+      This first group of bindings allows you to navigate the panes with Vim-like movements.
+      If you need to move left, just <code>PREFIX h</code>.
+    </p>
+    <p>
+      My favorite feature of tmux is splitting a window into different panes.
+      I could never remember the default bindings
+      (<code>%</code> for horizontal, <code> "</code> for vertical split).
+      These (in the second block above) are much nicer.
+    </p>
+    <p>
+      Adjusting the pane size is <span>very</span> difficult without dedicated commands.
+      To avoid using long instructions in Command Mode,
+      these additional Vim-like bindings (third block) are awesome.
+    </p>
+    <p>
+      Lastly, it is difficult to tell which pane is active with default tmux.
+      I found that adding some color to the border of the active pane (last block)
+      went a long way.
+    </p>
+
+    <p><span class="bold">Copy Mode</span></p>
+    <p>
+      The goal of life, really, is to keep your fingers on the home-row as much as possible.
+      I still have a few sticking points, and a major one used to be copying text from the terminal.
+    </p>
+    <p>
+      tmux makes this easy, with Copy Mode.
+      Enter copy mode with <code>PREFIX [</code>.
+      Jump around the buffer by scrolling or
+      searching (<code>?</code> and <code> /</code>)
+      and grab text with <code>Space</code> and <code>Enter</code>.
+      Then paste with <code>PREFIX ]</code>.
+    </p>
+    <p>
+      This is another feature I should have been using for years.
+      Plus, you can turn on Vim-like bindings
+      (<code>setw -g mode-keys vi</code>)
+      to make moving around the buffer easy.
+    </p>
+
+    <p><span class="bold">Repeatable Commands</span></p>
+    <p>
+      This is a small win, but I was delighted to learn that you can make commands repeatable.
+      For example, the command to move to the next window is <code>PREFIX n</code>.
+      So if you want to move two windows forward, you'd hit
+      <code>PREFIX n PREFIX n</code>.
+    </p>
+    <p>
+      However, the <code>-r </code> flag allows commands to be repeatable.
+      If we using the following configuration <code>bind -r n select-window -t :+</code>
+      now <code>PREFIX n n</code> will move two windows forward
+      (skipping the repeated calls to prefix is now okay).
+      This is great for lots of navigation commands.
+    </p>
+
+    <h5 class="blog-title left">More Goodies</h5>
+    <p>A sampling of the some other things I learned&mdash;</p>
+    <ul>
+      <li>
+        customizing the status bar is easy to do.
+        I display current session name, window number, and pane number with
+        <code>set -g status-left "session: #S || window: #I || pane: #P"</code>
+      </li>
+      <li>
+        writing a script to launch tmux with specific specifications
+        (e.g. 2 windows named 'code' and 'status',
+        4 panes in one window, 2 panes in the other window,
+        run htop and open Vim)
+        is not difficult at all
+      </li>
+      <li>
+        pairing with tmux is boss
+      </li>
+    </ul>
+
+    <h5 class="blog-title left">Wrapping Up</h5>
+    <p>
+      One thing that made learning tmux easier than I expected is that
+      I don't have a need for many of its advanced features.
+      tmux can do much more than I discussed,
+      like moving panes between sessions and
+      integrating more tightly with the operating system.
+      For a comprehensive rundown, consult the <code>man</code> page.
+    </p>
+    </p>
+      However, the new things I'm using are a great help.
+      My config file is available on
+      <a href="https://github.com/common-nighthawk/vim/blob/master/.tmux.conf">Github</a>.
+    </p>
+
+    <hr>
+    <a name="footer-1"><sup>1<sup></a>
+    There is one semantic wrinkle that makes talking about
+    these different multiplexers a little more challenging:
+    they use different terms for the similar things <span>and</span>
+    use the same terms for different things.
+    Most noticeably, in Screen a 'window' is a region of a display.
+    That is, you can put numerous windows on your view.
+    In tmux, a 'window' is the full view and can be divided into panes.
+    It gets extra messy, because lots of people use both Screen and tmux
+    and then use the terms wrong&mdash;I see lots of people using tmux terms
+    in relation to Screen and vice versa.
+    The best explanation I found is
+    <a href="http://wtanaka.com/node/8136">this blog post</a>.
+
+
+    <hr><p class="twitter">Have anything to say? Questions or feedback? Tweet at me <a href="https://twitter.com/cmmn_nighthawk">@cmmn_nighthawk</a>!</p>
+  </div>
+</body>
+</html>
