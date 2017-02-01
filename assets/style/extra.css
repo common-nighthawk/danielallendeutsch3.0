@@ -8,6 +8,7 @@ body { color: #2f2f2f; }
 img { border-radius: 0; }
 ul { padding-left: 15px; }
 li { padding-bottom: 5px; }
+dl li { padding: 0; }
 td {
   text-align: center;
   border: 1px solid #dddddd;

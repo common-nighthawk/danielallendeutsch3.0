@@ -20,6 +20,9 @@ h5 {
 }
 h6 { margin-bottom: 10px !important; }
 p { margin: 0 0 14px; }
+dt, dd { font-style: italic; }
+dt { padding-bottom: 10px; }
+dl ul { margin-left: 4px; }
 
 span { font-style: italic; }
 .bold { font-weight: bold; }
