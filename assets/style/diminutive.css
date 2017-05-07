@@ -4,6 +4,21 @@ body {
   text-align: justify;
 }
 
+a:nth-of-type(1) {
+  margin-top: 10px;
+  float: left;
+}
+
+a:nth-of-type(2) {
+  margin-top: 10px;
+  float: right;
+}
+
+strong:nth-of-type(1) {
+  display: block;
+  margin-top: 10px;
+}
+
 img {
   margin: 0 auto;
   display: block;
