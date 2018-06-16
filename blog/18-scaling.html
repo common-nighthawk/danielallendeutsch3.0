@@ -52,12 +52,12 @@
     <p>
     Do you know the difference in Rails between
     <code>Event.all.sort(&:created_at).last.id</code> and
-    <code>Event.order(:created_at).id</code>?  The first instantiates an object
-    for every Event and loads it into memory, then compares the created_at time
-    in ruby across all records to sort them, then grabs the last one's id. The
-    second queries the database to get the last created_at record and then
-    grabs the id. The point: these look very similar, but one can be *very*
-    slow and one should always be fast.
+    <code>Event.order(:created_at).last.id</code>?  The first instantiates an
+    object for every Event and loads it into memory, then compares the
+    created_at time in ruby across all records to sort them, then grabs the
+    last one's id. The second queries the database to get the last created_at
+    record and then grabs the id. The point: these look very similar, but one
+    can be *very* slow and one should always be fast.
     </p>
 
     <p>
